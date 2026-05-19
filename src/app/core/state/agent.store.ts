@@ -39,7 +39,7 @@ const initialWidgets = (): WidgetMap => ({
   venue: undefined,
 });
 
-export type GlobalStatus = 'idle' | 'planning' | 'running' | 'done' | 'error';
+type GlobalStatus = 'idle' | 'planning' | 'running' | 'done' | 'error';
 
 @Injectable({ providedIn: 'root' })
 export class AgentStore {

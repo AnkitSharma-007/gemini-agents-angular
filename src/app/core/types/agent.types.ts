@@ -4,6 +4,19 @@ export type SpecialistId = Exclude<AgentId, 'planner' | 'auditor'>;
 
 export const SPECIALIST_IDS = ['budget', 'schedule', 'venue'] as const satisfies readonly SpecialistId[];
 
+export const SPECIALIST_META: Record<
+  SpecialistId,
+  { readonly label: string; readonly icon: string }
+> = {
+  budget: { label: 'Budget', icon: 'payments' },
+  schedule: { label: 'Schedule', icon: 'event_note' },
+  venue: { label: 'Venue', icon: 'location_on' },
+};
+
+export function isSpecialistId(id: AgentId): id is SpecialistId {
+  return id === 'budget' || id === 'schedule' || id === 'venue';
+}
+
 export type AgentStatus =
   | 'idle'
   | 'pending'
@@ -31,7 +44,7 @@ export interface PlannerOutput {
   agents: AgentBrief[];
 }
 
-export type AuditSeverity = 'warning' | 'info';
+type AuditSeverity = 'warning' | 'info';
 
 export interface AuditIssue {
   id: string;
@@ -53,7 +66,7 @@ export class MissingApiKeyError extends Error {
   }
 }
 
-export type ApiErrorClass = 'auth' | 'quota' | 'network' | 'other';
+type ApiErrorClass = 'auth' | 'quota' | 'network' | 'other';
 
 export function classifyApiError(err: unknown): ApiErrorClass {
   if (err instanceof MissingApiKeyError) return 'auth';

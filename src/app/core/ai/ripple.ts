@@ -1,19 +1,13 @@
-import type { SpecialistId } from '../types/agent.types';
+import { SPECIALIST_META, type SpecialistId } from '../types/agent.types';
 import type { DynamicComponentConfig } from '../types/widget.types';
 
-export const RIPPLE_DEPENDENCIES: Record<
+const RIPPLE_DEPENDENCIES: Record<
   SpecialistId,
   readonly SpecialistId[]
 > = {
   venue: ['budget'],
   schedule: ['budget'],
   budget: [],
-};
-
-const UPSTREAM_LABELS: Record<SpecialistId, string> = {
-  budget: 'Budget',
-  schedule: 'Schedule',
-  venue: 'Venue',
 };
 
 const DOWNSTREAM_FOCUS: Record<SpecialistId, string> = {
@@ -41,10 +35,10 @@ export function buildRipplePrompt(
 ): string {
   const focus = DOWNSTREAM_FOCUS[downstream] || 'Align with the upstream change.';
   return [
-    `The ${UPSTREAM_LABELS[changed]} widget was just updated by the critic. Refresh your ${UPSTREAM_LABELS[downstream]} output so it stays consistent.`,
+    `The ${SPECIALIST_META[changed].label} widget was just updated by the critic. Refresh your ${SPECIALIST_META[downstream].label} output so it stays consistent.`,
     focus,
     '',
-    `Updated ${UPSTREAM_LABELS[changed]} JSON:`,
+    `Updated ${SPECIALIST_META[changed].label} JSON:`,
     '```json',
     JSON.stringify(changedPayload, null, 2),
     '```',
@@ -61,10 +55,10 @@ export function buildMultiRipplePrompt(
   const focus = DOWNSTREAM_FOCUS[downstream] || 'Align with all upstream changes.';
   const blocks = upstreams.map(
     (u) =>
-      `### ${UPSTREAM_LABELS[u.id]}\n\`\`\`json\n${JSON.stringify(u.payload, null, 2)}\n\`\`\``,
+      `### ${SPECIALIST_META[u.id].label}\n\`\`\`json\n${JSON.stringify(u.payload, null, 2)}\n\`\`\``,
   );
   return [
-    `One or more upstream widgets changed. Refresh your ${UPSTREAM_LABELS[downstream]} output for consistency.`,
+    `One or more upstream widgets changed. Refresh your ${SPECIALIST_META[downstream].label} output for consistency.`,
     focus,
     '',
     'Current upstream payloads:',

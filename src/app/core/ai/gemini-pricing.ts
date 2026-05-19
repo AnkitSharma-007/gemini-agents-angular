@@ -2,13 +2,13 @@ import type { GenerateContentResponseUsageMetadata } from '@google/genai';
 import type { TokenUsage } from '../types/telemetry.types';
 
 /** Paid-tier list prices (USD per 1M tokens). Preview models may drift — estimates only. */
-export interface ModelPricing {
+interface ModelPricing {
   inputPerMillion: number;
   outputPerMillion: number;
 }
 
 /** @see https://ai.google.dev/gemini-api/docs/pricing */
-export const MODEL_PRICING_USD: Record<string, ModelPricing> = {
+const MODEL_PRICING_USD: Record<string, ModelPricing> = {
   'gemini-3-flash-preview': { inputPerMillion: 0.5, outputPerMillion: 3.0 },
   'gemini-3-pro-preview': { inputPerMillion: 2.0, outputPerMillion: 12.0 },
   'gemini-3.1-pro-preview': { inputPerMillion: 2.0, outputPerMillion: 12.0 },
@@ -16,7 +16,7 @@ export const MODEL_PRICING_USD: Record<string, ModelPricing> = {
 
 const DEFAULT_PRICING: ModelPricing = { inputPerMillion: 0.5, outputPerMillion: 3.0 };
 
-export function pricingForModel(model: string): ModelPricing {
+function pricingForModel(model: string): ModelPricing {
   return MODEL_PRICING_USD[model] ?? DEFAULT_PRICING;
 }
 

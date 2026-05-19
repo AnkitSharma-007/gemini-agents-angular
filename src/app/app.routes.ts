@@ -4,11 +4,12 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    loadComponent: () => import('./pages/guide/guide.page').then((m) => m.GuidePage),
+    loadComponent: () => import('./pages/home/home.page').then((m) => m.HomePage),
   },
   {
     path: 'architect',
-    loadComponent: () => import('./pages/home/home.page').then((m) => m.HomePage),
+    loadComponent: () =>
+      import('./pages/workspace/workspace.page').then((m) => m.WorkspacePage),
   },
   { path: '**', redirectTo: '' },
 ];

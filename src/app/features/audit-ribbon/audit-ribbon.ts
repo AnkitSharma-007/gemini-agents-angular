@@ -14,14 +14,9 @@ import {
   AuditIssue,
   MissingApiKeyError,
   SPECIALIST_IDS,
+  SPECIALIST_META,
   SpecialistId,
 } from '../../core/types/agent.types';
-
-const TARGET_ICONS: Record<SpecialistId, string> = {
-  budget: 'payments',
-  schedule: 'event_note',
-  venue: 'location_on',
-};
 
 @Component({
   selector: 'dea-audit-ribbon',
@@ -79,7 +74,7 @@ export class AuditRibbon {
   );
 
   protected iconFor(targetId: SpecialistId): string {
-    return TARGET_ICONS[targetId];
+    return SPECIALIST_META[targetId].icon;
   }
 
   protected isTargetBusy(targetId: SpecialistId): boolean {

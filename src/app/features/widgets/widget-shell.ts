@@ -17,17 +17,12 @@ import { AgentStore } from '../../core/state/agent.store';
 import {
   AgentStatus,
   MissingApiKeyError,
+  SPECIALIST_META,
   SpecialistId,
 } from '../../core/types/agent.types';
 import { RefineBar } from './refine-bar';
 
-export type ShellMode = 'ghost' | 'real' | 'error';
-
-const SLOT_LABELS: Record<SpecialistId, { label: string; icon: string }> = {
-  budget: { label: 'Budget', icon: 'payments' },
-  schedule: { label: 'Schedule', icon: 'event_note' },
-  venue: { label: 'Venue', icon: 'location_on' },
-};
+type ShellMode = 'ghost' | 'real' | 'error';
 
 @Component({
   selector: 'dea-widget-shell',
@@ -52,7 +47,7 @@ export class WidgetShell {
   readonly widgetId = input.required<SpecialistId>();
   readonly title = input<string | undefined>(undefined);
 
-  protected readonly meta = computed(() => SLOT_LABELS[this.widgetId()]);
+  protected readonly meta = computed(() => SPECIALIST_META[this.widgetId()]);
 
   protected readonly status = computed<AgentStatus>(
     () => this.store.agentStates()[this.widgetId()].status,

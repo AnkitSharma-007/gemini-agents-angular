@@ -5,6 +5,7 @@ import {
   AgentBrief,
   AgentId,
   AuditIssue,
+  isSpecialistId,
   MissingApiKeyError,
   PlannerOutput,
   SpecialistId,
@@ -54,8 +55,7 @@ export class AgentOrchestrator {
     });
   }
 
-  /** Aborts any in-flight Gemini streams started by this orchestrator. */
-  cancelInFlight(): void {
+  private cancelInFlight(): void {
     this.currentController?.abort();
     this.currentController = null;
   }
@@ -66,8 +66,12 @@ export class AgentOrchestrator {
     return this.currentController.signal;
   }
 
-  async run(userIntent: string): Promise<void> {
+  private requireKey(): void {
     if (!this.apiKeys.hasKey()) throw new MissingApiKeyError();
+  }
+
+  async run(userIntent: string): Promise<void> {
+    this.requireKey();
     const trimmed = userIntent.trim();
     if (!trimmed) return;
 
@@ -107,7 +111,7 @@ export class AgentOrchestrator {
 
   /** Marks downstream widgets stale on success; does not auto-ripple or re-audit. */
   async refine(widgetId: SpecialistId, deltaPrompt: string): Promise<void> {
-    if (!this.apiKeys.hasKey()) throw new MissingApiKeyError();
+    this.requireKey();
     if (!deltaPrompt.trim()) return;
 
     const existing = this.store.getWidget(widgetId);
@@ -126,7 +130,7 @@ export class AgentOrchestrator {
 
   /** Apply a critic fix-it: refine target, auto-ripple downstreams, then audit. */
   async applyFixIt(issue: AuditIssue): Promise<void> {
-    if (!this.apiKeys.hasKey()) throw new MissingApiKeyError();
+    this.requireKey();
 
     const existing = this.store.getWidget(issue.targetId);
     if (!existing) return;
@@ -154,17 +158,15 @@ export class AgentOrchestrator {
 
   /** User-triggered refresh of a stale downstream widget (manual ripple). */
   async rippleUpdate(downstreamId: SpecialistId): Promise<void> {
-    if (!this.apiKeys.hasKey()) throw new MissingApiKeyError();
+    this.requireKey();
 
     const downstream = this.store.getWidget(downstreamId);
     if (!downstream) return;
 
-    const ups = upstreamsOf(downstreamId)
-      .filter((u) => this.store.getWidget(u))
-      .map((u) => ({
-        id: u,
-        payload: this.store.getWidget(u)!.payload,
-      }));
+    const ups = upstreamsOf(downstreamId).flatMap((u) => {
+      const widget = this.store.getWidget(u);
+      return widget ? [{ id: u, payload: widget.payload }] : [];
+    });
 
     if (!ups.length) {
       this.store.unmarkStale(downstreamId);
@@ -185,7 +187,7 @@ export class AgentOrchestrator {
 
   /** Manually re-run the auditor against the current dashboard. */
   async reAudit(): Promise<void> {
-    if (!this.apiKeys.hasKey()) throw new MissingApiKeyError();
+    this.requireKey();
     const signal = this.freshSignal();
     await this.audit(signal);
     this.store.touchRunWallEnded();
@@ -193,7 +195,7 @@ export class AgentOrchestrator {
 
   /** Re-dispatch a single agent using its last stored brief (error recovery). */
   async retryAgent(id: AgentId): Promise<void> {
-    if (!this.apiKeys.hasKey()) throw new MissingApiKeyError();
+    this.requireKey();
     const signal = this.freshSignal();
 
     if (id === 'auditor') {
@@ -225,12 +227,14 @@ export class AgentOrchestrator {
       return;
     }
 
+    if (!isSpecialistId(id)) return;
+
     const brief = this.store.getAgentBrief(id);
     if (!brief) return;
 
-    const existing = this.store.getWidget(id as SpecialistId);
+    const existing = this.store.getWidget(id);
     const prior = existing?.payload.config;
-    await this.dispatch(id as SpecialistId, brief, prior, signal);
+    await this.dispatch(id, brief, prior, signal);
     this.store.touchRunWallEnded();
   }
 

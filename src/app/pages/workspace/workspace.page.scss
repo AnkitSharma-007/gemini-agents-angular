@@ -1,0 +1,146 @@
+@use 'mixins' as m;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 28px 40px;
+  min-width: 0;
+  flex: 1;
+}
+
+.layout-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.cc-col,
+.ct-col {
+  min-width: 0;
+}
+
+.ct-col {
+  position: sticky;
+  top: 96px;
+}
+
+.layout-grid.is-active {
+  gap: 20px;
+}
+
+@include m.desktop-down {
+  .layout-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ct-col {
+    position: static;
+  }
+}
+
+.dashboard-row {
+  width: 100%;
+  min-width: 0;
+}
+
+.dashboard-row-empty {
+  display: flex;
+  justify-content: center;
+}
+
+.dashboard-empty {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 56px 28px;
+  text-align: center;
+  @include m.glass-surface($shadow: var(--dea-shadow-1), $blur: 14px, $saturate: 100%);
+  width: 100%;
+  max-width: 760px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: var(--dea-gradient-brand);
+    opacity: 0.15;
+    z-index: -1;
+    filter: blur(40px);
+  }
+
+  .empty-illu {
+    width: 64px;
+    height: 64px;
+    display: grid;
+    place-items: center;
+    border-radius: 18px;
+    background: var(--dea-gradient-brand-soft);
+    box-shadow: 0 12px 30px -8px var(--dea-accent-glow);
+
+    mat-icon {
+      color: #fff;
+      @include m.sized-icon(30);
+    }
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  p {
+    margin: 0;
+    color: var(--dea-fg-muted);
+    max-width: 520px;
+    line-height: 1.6;
+    font-size: 13.5px;
+  }
+}
+
+@include m.tablet-down {
+  :host {
+    padding: 22px 18px 32px;
+    gap: 22px;
+  }
+
+  .layout-grid {
+    gap: 18px;
+  }
+}
+
+@include m.mobile {
+  :host {
+    padding: 18px 14px 28px;
+    gap: 18px;
+  }
+
+  .dashboard-empty {
+    padding: 40px 18px;
+
+    h3 {
+      font-size: 16px;
+    }
+
+    p {
+      font-size: 12.5px;
+    }
+
+    .empty-illu {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+
+      mat-icon {
+        @include m.sized-icon(26);
+      }
+    }
+  }
+}

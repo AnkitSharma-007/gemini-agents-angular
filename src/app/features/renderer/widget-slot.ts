@@ -3,10 +3,10 @@ import {
   Component,
   ComponentRef,
   computed,
+  DestroyRef,
   effect,
   inject,
   input,
-  OnDestroy,
   Type,
   ViewChild,
   ViewContainerRef,
@@ -30,17 +30,11 @@ type SlotMode = 'ghost' | 'real' | 'error';
       <dea-widget-shell [mode]="mode()" [widgetId]="slotId()" />
     }
   `,
-  styles: [
-    `
-      :host {
-        display: block;
-        height: 100%;
-      }
-    `,
-  ],
+  styleUrl: './widget-slot.scss',
 })
-export class WidgetSlot implements OnDestroy {
+export class WidgetSlot {
   private readonly store = inject(AgentStore);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly slotId = input.required<SpecialistId>();
 
@@ -63,6 +57,8 @@ export class WidgetSlot implements OnDestroy {
   });
 
   constructor() {
+    this.destroyRef.onDestroy(() => this.destroyInstance());
+
     effect(() => {
       const w = this.widget();
       const id = this.slotId();
@@ -85,10 +81,6 @@ export class WidgetSlot implements OnDestroy {
         this.componentRef.changeDetectorRef.markForCheck();
       }
     });
-  }
-
-  ngOnDestroy(): void {
-    this.destroyInstance();
   }
 
   private materialiseOrUpdate(id: SpecialistId, w: WidgetEntry): void {

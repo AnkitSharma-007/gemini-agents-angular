@@ -1,6 +1,6 @@
 import { computed, effect, Injectable, signal } from '@angular/core';
 
-export type ThemeMode = 'light' | 'dark';
+type ThemeMode = 'light' | 'dark';
 
 const STORAGE_KEY = 'dea.theme';
 const LIGHT_CLASS = 'theme-light';
@@ -45,7 +45,7 @@ export class ThemeService {
     });
   }
 
-  setMode(mode: ThemeMode): void {
+  private setMode(mode: ThemeMode): void {
     safeWrite(mode);
     this._mode.set(mode);
   }

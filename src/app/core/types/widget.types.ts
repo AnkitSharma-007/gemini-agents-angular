@@ -5,7 +5,7 @@ export interface Citation {
   uri: string;
 }
 
-export interface BudgetLineItem {
+interface BudgetLineItem {
   category: string;
   amount: number;
   rationale: string;
@@ -17,7 +17,7 @@ export interface BudgetConfig {
   lineItems: BudgetLineItem[];
 }
 
-export interface ScheduleSession {
+interface ScheduleSession {
   time: string;
   title: string;
   speaker?: string;
@@ -53,7 +53,7 @@ export type BudgetResult = { title: string } & BudgetConfig;
 export type ScheduleResult = { title: string } & ScheduleConfig;
 export type VenueResult = { title: string } & VenueConfig;
 
-export interface SpecialistResultMap {
+interface SpecialistResultMap {
   budget: BudgetResult;
   schedule: ScheduleResult;
   venue: VenueResult;
@@ -69,12 +69,20 @@ export function intoComponentConfig<T extends SpecialistId>(
   id: T,
   result: SpecialistResultMap[T],
 ): DynamicComponentConfig {
-  const { title, ...config } = result;
-  return {
-    type: RENDER_TYPE_BY_ID[id],
-    title,
-    config,
-  } as unknown as DynamicComponentConfig;
+  switch (id) {
+    case 'budget': {
+      const { title, ...config } = result as BudgetResult;
+      return { type: 'render_budget', title, config };
+    }
+    case 'schedule': {
+      const { title, ...config } = result as ScheduleResult;
+      return { type: 'render_schedule', title, config };
+    }
+    case 'venue': {
+      const { title, ...config } = result as VenueResult;
+      return { type: 'render_venue', title, config };
+    }
+  }
 }
 
 export interface WidgetEntry {

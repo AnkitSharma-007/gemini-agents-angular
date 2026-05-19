@@ -1,0 +1,48 @@
+:host {
+  display: block;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 12px;
+  border-top: 1px dashed var(--dea-border);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--dea-fg-muted);
+  flex-shrink: 0;
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    color: var(--dea-success);
+  }
+}
+
+mat-chip-set {
+  flex: 1;
+}
+
+a[mat-chip] {
+  text-decoration: none;
+  font-size: 12px;
+  cursor: pointer;
+  background: var(--dea-bg-elev-2);
+}
+
+mat-icon[matChipTrailingIcon] {
+  font-size: 13px;
+  width: 13px;
+  height: 13px;
+}

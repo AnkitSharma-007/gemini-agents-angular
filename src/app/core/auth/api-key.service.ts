@@ -11,7 +11,7 @@ export const MODEL_FOR_MODE: Record<QualityMode, string> = {
   quality: 'gemini-3-pro-preview',
 };
 
-export type ValidateResult =
+type ValidateResult =
   | { ok: true }
   | { ok: false; reason: string };
 

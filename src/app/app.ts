@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { ApiKeyDialogService } from './core/auth/api-key-dialog.service';
 import { ApiKeyService } from './core/auth/api-key.service';
 import { ThemeService } from './core/theme/theme.service';
 
@@ -22,7 +22,7 @@ import { ThemeService } from './core/theme/theme.service';
   styleUrl: './app.scss',
 })
 export class App {
-  private readonly dialog = inject(MatDialog);
+  private readonly keyDialog = inject(ApiKeyDialogService);
   private readonly apiKeys = inject(ApiKeyService);
   private readonly themeService = inject(ThemeService);
 
@@ -36,12 +36,7 @@ export class App {
   );
 
   protected async openKeyDialog(): Promise<void> {
-    const { ApiKeyDialog } = await import('./core/auth/api-key.dialog');
-    this.dialog.open(ApiKeyDialog, {
-      autoFocus: 'first-tabbable',
-      restoreFocus: true,
-      panelClass: 'dea-dialog-panel',
-    });
+    await this.keyDialog.open();
   }
 
   protected toggleTheme(): void {

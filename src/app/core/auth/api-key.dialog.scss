@@ -173,10 +173,9 @@
 
 .quality-head {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
 }
 
 .quality-eyebrow {
@@ -185,12 +184,12 @@
 }
 
 .quality-hint {
-  flex: 1;
-  text-align: right;
   font-size: 11.5px;
+  line-height: 1.45;
   color: var(--dea-fg-muted);
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   letter-spacing: 0.02em;
+  overflow-wrap: anywhere;
 }
 
 .quality-toggle {
@@ -369,16 +368,6 @@
   .dialog-body {
     padding: 16px 20px 4px;
     gap: 14px;
-  }
-
-  .quality-head {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 4px;
-  }
-
-  .quality-hint {
-    text-align: left;
   }
 
   .dialog-actions {

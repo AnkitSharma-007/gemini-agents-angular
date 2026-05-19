@@ -21,6 +21,7 @@ import {
   AgentStatus,
   MissingApiKeyError,
   SPECIALIST_IDS,
+  SPECIALIST_META,
 } from '../../core/types/agent.types';
 
 interface RowMeta {
@@ -32,9 +33,9 @@ interface RowMeta {
 const ROW_META: Record<AgentId, RowMeta> = {
   planner: { id: 'planner', label: 'Planner', icon: 'hub' },
   auditor: { id: 'auditor', label: 'Auditor (critic)', icon: 'rule' },
-  budget: { id: 'budget', label: 'Budget agent', icon: 'payments' },
-  schedule: { id: 'schedule', label: 'Schedule agent', icon: 'event_note' },
-  venue: { id: 'venue', label: 'Venue agent', icon: 'location_on' },
+  budget: { id: 'budget', label: 'Budget agent', icon: SPECIALIST_META.budget.icon },
+  schedule: { id: 'schedule', label: 'Schedule agent', icon: SPECIALIST_META.schedule.icon },
+  venue: { id: 'venue', label: 'Venue agent', icon: SPECIALIST_META.venue.icon },
 };
 
 interface RenderRow {

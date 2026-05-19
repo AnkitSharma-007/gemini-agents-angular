@@ -13,36 +13,7 @@ import { WidgetSlot } from './widget-slot';
       }
     </section>
   `,
-  styles: [
-    `
-      :host {
-        display: block;
-      }
-
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
-        gap: 20px;
-        align-items: stretch;
-      }
-
-      dea-widget-slot {
-        display: block;
-        min-width: 0;
-        min-height: 320px;
-      }
-
-      @media (max-width: 720px) {
-        .grid {
-          gap: 14px;
-        }
-
-        dea-widget-slot {
-          min-height: 280px;
-        }
-      }
-    `,
-  ],
+  styleUrl: './generative-renderer.scss',
 })
 export class GenerativeRenderer {
   readonly slotIds = SPECIALIST_IDS;
