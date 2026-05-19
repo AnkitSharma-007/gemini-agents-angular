@@ -6,7 +6,6 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { ApiKeyDialog } from '../../core/auth/api-key.dialog';
 
 @Component({
   selector: 'dea-no-key-empty-state',
@@ -18,7 +17,8 @@ import { ApiKeyDialog } from '../../core/auth/api-key.dialog';
 export class NoKeyEmptyState {
   private readonly dialog = inject(MatDialog);
 
-  protected open(): void {
+  protected async open(): Promise<void> {
+    const { ApiKeyDialog } = await import('../../core/auth/api-key.dialog');
     this.dialog.open(ApiKeyDialog, {
       autoFocus: 'first-tabbable',
       restoreFocus: true,

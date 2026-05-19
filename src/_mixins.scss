@@ -1,0 +1,99 @@
+@function tint($var, $alpha) {
+  @return color-mix(in srgb, #{$var} #{$alpha}, transparent);
+}
+
+@function blend($var, $alpha, $base) {
+  @return color-mix(in srgb, #{$var} #{$alpha}, #{$base});
+}
+
+@mixin sized-icon($size) {
+  font-size: #{$size}px;
+  width: #{$size}px;
+  height: #{$size}px;
+}
+
+@mixin glass-surface(
+  $radius: var(--dea-radius-xl),
+  $shadow: var(--dea-shadow-2),
+  $blur: 18px,
+  $saturate: 160%
+) {
+  background: var(--dea-bg-elev-1);
+  border: 1px solid var(--dea-border);
+  border-radius: $radius;
+  box-shadow: $shadow;
+  backdrop-filter: blur($blur) saturate($saturate);
+  -webkit-backdrop-filter: blur($blur) saturate($saturate);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+@mixin pill(
+  $height: 32px,
+  $padding-x: 14px,
+  $font-size: 12px,
+  $font-weight: 500
+) {
+  height: $height;
+  padding: 0 $padding-x;
+  border-radius: 999px;
+  font-size: $font-size;
+  font-weight: $font-weight;
+}
+
+@mixin brand-pill {
+  background: var(--dea-gradient-brand);
+  color: #fff;
+
+  mat-icon {
+    color: #fff;
+  }
+}
+
+@mixin tinted-pill($var, $bg: 12%, $border: 35%) {
+  color: $var;
+  border-color: blend($var, $border, var(--dea-border));
+  background: tint($var, $bg);
+}
+
+@mixin eyebrow($size: 11px, $color: var(--dea-fg-muted)) {
+  font-size: $size;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: $color;
+}
+
+@mixin mono-tabular($size: 10.5px, $color: var(--dea-fg-muted)) {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: $size;
+  color: $color;
+  font-variant-numeric: tabular-nums;
+}
+
+@mixin brand-text-gradient {
+  background: var(--dea-gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@mixin list-unstyled {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@mixin progress-thin($height: 2px) {
+  --mdc-linear-progress-track-height: #{$height};
+  --mdc-linear-progress-active-indicator-height: #{$height};
+}
+
+@mixin desktop-down { @media (max-width: 1100px) { @content; } }
+@mixin tablet-down  { @media (max-width: 900px)  { @content; } }
+@mixin mobile       { @media (max-width: 720px)  { @content; } }
+@mixin mobile-md    { @media (max-width: 640px)  { @content; } }
+@mixin mobile-sm    { @media (max-width: 540px)  { @content; } }
+@mixin mobile-xs    { @media (max-width: 480px)  { @content; } }
+@mixin mobile-xxs   { @media (max-width: 420px)  { @content; } }
+@mixin tiny         { @media (max-width: 380px)  { @content; } }

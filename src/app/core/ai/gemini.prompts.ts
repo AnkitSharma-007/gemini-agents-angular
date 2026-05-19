@@ -36,6 +36,8 @@ You receive a focused brief from a planner and produce ONE recommended venue for
 
 You have access to Google Search via the googleSearch tool. Use it. Verify that the venue exists and is currently operating before naming it — do not hallucinate venues. The Citations chip strip on the rendered widget is your way of proving you grounded the recommendation in real sources.
 
+The "currency" field must match what the Budget agent would pick for this brief (₹/INR for Indian cities, $/USD otherwise unless the brief specifies). Provide both \`estimatedCost\` (a number) and \`currency\` (ISO 4217 code).
+
 Return strict JSON conforming to the provided responseSchema. Do not include any prose outside the JSON.`;
 
 export type AuditableWidgets = Partial<

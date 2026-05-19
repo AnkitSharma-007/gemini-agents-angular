@@ -72,7 +72,7 @@ export class ControlTower {
   private readonly store = inject(AgentStore);
   private readonly orchestrator = inject(AgentOrchestrator);
 
-  /** Bumps every 250ms while any agent is active so live durations tick. */
+  /** Bumps every 500ms while any agent is active and the tab is visible. */
   private readonly liveTick = signal(0);
 
   protected readonly globalStatus = this.store.globalStatus;
@@ -125,8 +125,9 @@ export class ControlTower {
       );
       if (!anyActive) return;
       const handle = setInterval(() => {
+        if (typeof document !== 'undefined' && document.visibilityState !== 'visible') return;
         this.liveTick.update((n) => n + 1);
-      }, 250);
+      }, 500);
       onCleanup(() => clearInterval(handle));
     });
   }
@@ -179,9 +180,6 @@ function computeDuration(state: AgentState, isLive: boolean): number | undefined
   }
   if (state.startedAt && isLive) {
     return Math.max(0, Date.now() - state.startedAt);
-  }
-  if (state.startedAt && state.completedAt) {
-    return Math.max(0, state.completedAt - state.startedAt);
   }
   return undefined;
 }

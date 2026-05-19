@@ -38,10 +38,8 @@ const SLOT_LABELS: Record<SpecialistId, { label: string; icon: string }> = {
   styleUrl: './widget-shell.scss',
   host: {
     '[class.shell-mode-ghost]': 'mode() === "ghost"',
-    '[class.shell-mode-real]': 'mode() === "real"',
     '[class.shell-mode-error]': 'mode() === "error"',
     '[class.shell-pulse]': 'pulsing()',
-    '[class.shell-streaming]': 'isStreaming()',
     '[class.shell-stale]': 'mode() === "real" && isStale()',
   },
 })

@@ -1,11 +1,8 @@
 import type { SpecialistId } from './agent.types';
 
-export type WidgetIntent = 'render_budget' | 'render_schedule' | 'render_venue';
-
 export interface Citation {
   title: string;
   uri: string;
-  snippet?: string;
 }
 
 export interface BudgetLineItem {
@@ -43,6 +40,7 @@ export interface VenueConfig {
   capacity: number;
   amenities: string[];
   estimatedCost: number;
+  currency: string;
   rationale: string;
 }
 
@@ -61,48 +59,26 @@ export interface SpecialistResultMap {
   venue: VenueResult;
 }
 
-export type DynamicComponentForId<T extends SpecialistId> = T extends 'budget'
-  ? Extract<DynamicComponentConfig, { type: 'render_budget' }>
-  : T extends 'schedule'
-    ? Extract<DynamicComponentConfig, { type: 'render_schedule' }>
-    : Extract<DynamicComponentConfig, { type: 'render_venue' }>;
+const RENDER_TYPE_BY_ID = {
+  budget: 'render_budget',
+  schedule: 'render_schedule',
+  venue: 'render_venue',
+} as const satisfies Record<SpecialistId, DynamicComponentConfig['type']>;
 
 export function intoComponentConfig<T extends SpecialistId>(
   id: T,
   result: SpecialistResultMap[T],
-): DynamicComponentForId<T> {
-  switch (id) {
-    case 'budget': {
-      const { title, ...config } = result as BudgetResult;
-      return {
-        type: 'render_budget',
-        title,
-        config,
-      } as unknown as DynamicComponentForId<T>;
-    }
-    case 'schedule': {
-      const { title, ...config } = result as ScheduleResult;
-      return {
-        type: 'render_schedule',
-        title,
-        config,
-      } as unknown as DynamicComponentForId<T>;
-    }
-    case 'venue':
-    default: {
-      const { title, ...config } = result as VenueResult;
-      return {
-        type: 'render_venue',
-        title,
-        config,
-      } as unknown as DynamicComponentForId<T>;
-    }
-  }
+): DynamicComponentConfig {
+  const { title, ...config } = result;
+  return {
+    type: RENDER_TYPE_BY_ID[id],
+    title,
+    config,
+  } as unknown as DynamicComponentConfig;
 }
 
 export interface WidgetEntry {
   id: SpecialistId;
-  agentId: SpecialistId;
   generation: number;
   payload: DynamicComponentConfig;
   citations?: Citation[];

@@ -1,3 +1,5 @@
+@use 'mixins' as m;
+
 :host {
   display: block;
   height: 100%;
@@ -17,7 +19,7 @@
   background:
     radial-gradient(
       400px 200px at 0% 0%,
-      color-mix(in srgb, var(--dea-accent) 22%, transparent),
+      m.tint(var(--dea-accent), 22%),
       transparent 60%
     ),
     var(--dea-bg-elev-2);
@@ -34,16 +36,11 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--dea-fg-muted);
-  font-size: 12px;
-  font-weight: 500;
+  @include m.eyebrow($size: 12px);
   letter-spacing: 0.06em;
-  text-transform: uppercase;
 
   mat-icon {
-    font-size: 14px;
-    width: 14px;
-    height: 14px;
+    @include m.sized-icon(14);
     color: var(--dea-accent);
   }
 }
@@ -73,11 +70,7 @@
 }
 
 .stat-label {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--dea-fg-muted);
+  @include m.eyebrow;
 }
 
 .stat-value {
@@ -89,9 +82,7 @@
   font-variant-numeric: tabular-nums;
 
   mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
+    @include m.sized-icon(18);
     color: var(--dea-accent);
   }
 }
@@ -107,7 +98,7 @@
     border: 1px solid var(--dea-border);
 
     mat-icon[matChipAvatar] {
-      background: color-mix(in srgb, var(--dea-success) 22%, transparent);
+      background: m.tint(var(--dea-success), 22%);
       color: var(--dea-success);
       font-size: 14px;
     }
@@ -120,12 +111,12 @@
   font-size: 13.5px;
   line-height: 1.6;
   padding: 12px 14px;
-  background: color-mix(in srgb, var(--dea-bg-elev-2) 60%, transparent);
+  background: m.blend(var(--dea-bg-elev-2), 60%, transparent);
   border-left: 3px solid var(--dea-accent);
   border-radius: 6px;
 }
 
-@media (max-width: 480px) {
+@include m.mobile-xs {
   .hero {
     padding: 14px;
   }

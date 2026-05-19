@@ -130,10 +130,7 @@ export class AgentStore {
     return SPECIALIST_IDS.some((id) => !!w[id]);
   });
 
-  /**
-   * Insert or replace a widget. The generation counter increments on every
-   * call so the renderer can detect refines and trigger its pulse animation.
-   */
+  /** Increments `generation` on every write so the renderer detects refines. */
   upsertWidget(input: {
     id: WidgetEntry['id'];
     payload: DynamicComponentConfig;
@@ -141,7 +138,6 @@ export class AgentStore {
   }): WidgetEntry {
     const next: WidgetEntry = {
       id: input.id,
-      agentId: input.id,
       generation: 0,
       payload: input.payload,
       citations: input.citations,
@@ -160,11 +156,7 @@ export class AgentStore {
     return this.widgets()[id];
   }
 
-  /**
-   * Update an agent's lifecycle status. `startedAt` is captured the first
-   * time the agent enters an active phase (thinking/streaming) so the
-   * Control Tower can show a stable elapsed duration.
-   */
+  /** `startedAt` is captured on the first active phase; `completedAt` on terminal. */
   setAgentStatus(id: AgentId, status: AgentStatus, error?: string): void {
     if (
       this.recordingTimeline &&
@@ -239,11 +231,6 @@ export class AgentStore {
     return this.agentTelemetry()[id];
   }
 
-  endRunRecording(): void {
-    this.recordingTimeline = false;
-    this.runStartedAt = null;
-  }
-
   resetAgentStatesOnly(): void {
     this.agentStates.set(initialAgentStates());
   }
@@ -311,10 +298,6 @@ export class AgentStore {
 
   unmarkStale(id: SpecialistId): void {
     this.staleWidgets.update((arr) => arr.filter((x) => x !== id));
-  }
-
-  isStale(id: SpecialistId): boolean {
-    return this.staleWidgets().includes(id);
   }
 
   clearStale(): void {

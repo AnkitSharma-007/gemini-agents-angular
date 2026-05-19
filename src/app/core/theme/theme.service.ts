@@ -45,13 +45,11 @@ export class ThemeService {
     });
   }
 
-  /** Set the active theme and persist the choice for the next session. */
   setMode(mode: ThemeMode): void {
     safeWrite(mode);
     this._mode.set(mode);
   }
 
-  /** Flip between light and dark. */
   toggle(): void {
     this.setMode(this._mode() === 'dark' ? 'light' : 'dark');
   }

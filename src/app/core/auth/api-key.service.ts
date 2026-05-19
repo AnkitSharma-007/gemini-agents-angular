@@ -1,5 +1,5 @@
 import { computed, Injectable, signal } from '@angular/core';
-import { GoogleGenAI } from '@google/genai';
+import { loadGenaiSdk } from '../ai/genai-loader';
 
 const KEY_STORAGE = 'dea.geminiApiKey';
 const MODEL_STORAGE = 'dea.geminiModel';
@@ -110,7 +110,8 @@ export class ApiKeyService {
     const trimmed = candidate.trim();
     if (!trimmed) return { ok: false, reason: 'API key is empty.' };
     try {
-      const ai = new GoogleGenAI({ apiKey: trimmed });
+      const sdk = await loadGenaiSdk();
+      const ai = new sdk.GoogleGenAI({ apiKey: trimmed });
       const pager = await ai.models.list({ config: { pageSize: 1 } });
       if (pager.pageLength === 0) {
         return { ok: false, reason: 'No models returned for this key.' };

@@ -24,6 +24,7 @@
     <mat-form-field appearance="outline" subscriptSizing="dynamic" class="field">
       <mat-label>Adjustment for this widget</mat-label>
       <input
+        #draftInput
         matInput
         type="text"
         [ngModel]="draft()"
@@ -31,8 +32,7 @@
         name="refineDraft"
         autocomplete="off"
         placeholder="e.g. shrink the venue line item by 30%"
-        cdkFocusInitial
-        autofocus
+        [attr.aria-label]="'Adjustment for ' + widgetId() + ' widget'"
       />
     </mat-form-field>
     <div class="actions">

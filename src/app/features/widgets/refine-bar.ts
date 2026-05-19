@@ -2,9 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
+  ElementRef,
   inject,
   input,
   signal,
+  viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -40,6 +43,17 @@ export class RefineBar {
 
   protected readonly expanded = signal<boolean>(false);
   protected readonly draft = signal<string>('');
+
+  private readonly draftInput = viewChild<ElementRef<HTMLInputElement>>('draftInput');
+
+  constructor() {
+    effect(() => {
+      const input = this.draftInput();
+      if (input && this.expanded()) {
+        input.nativeElement.focus();
+      }
+    });
+  }
 
   protected readonly status = computed(
     () => this.store.agentStates()[this.widgetId()].status,

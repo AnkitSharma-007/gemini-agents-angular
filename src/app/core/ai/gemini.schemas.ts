@@ -1,4 +1,12 @@
-import { Type, type Schema } from '@google/genai';
+import type { Schema, Type as SdkType } from '@google/genai';
+
+const Type = {
+  OBJECT: 'OBJECT' as SdkType,
+  STRING: 'STRING' as SdkType,
+  NUMBER: 'NUMBER' as SdkType,
+  ARRAY: 'ARRAY' as SdkType,
+  BOOLEAN: 'BOOLEAN' as SdkType,
+} as const;
 
 export const PLANNER_SCHEMA: Schema = {
   type: Type.OBJECT,
@@ -174,6 +182,7 @@ export const VENUE_SCHEMA: Schema = {
     'capacity',
     'amenities',
     'estimatedCost',
+    'currency',
     'rationale',
   ],
   description: 'A single recommended venue for an event.',
@@ -206,8 +215,14 @@ export const VENUE_SCHEMA: Schema = {
       type: Type.NUMBER,
       description:
         'Estimated total venue cost for the full duration of the event, in ' +
-        "the same currency assumed by the budget agent (use the user's " +
-        'context to pick).',
+        'the chosen currency (match the budget agent — INR for Indian cities, ' +
+        'USD otherwise unless the brief specifies).',
+    },
+    currency: {
+      type: Type.STRING,
+      description:
+        'ISO 4217 currency code for `estimatedCost` (e.g. "USD", "INR", ' +
+        '"EUR"). Must match what the budget agent would pick for this brief.',
     },
     rationale: {
       type: Type.STRING,

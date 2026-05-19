@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { effect, inject, Injectable } from '@angular/core';
 import { ApiKeyService } from '../auth/api-key.service';
 import { AgentStore } from '../state/agent.store';
 import {
@@ -10,10 +10,7 @@ import {
   SpecialistId,
   SPECIALIST_IDS,
 } from '../types/agent.types';
-import {
-  intoComponentConfig,
-  SpecialistResultMap,
-} from '../types/widget.types';
+import { intoComponentConfig } from '../types/widget.types';
 import {
   buildMultiRipplePrompt,
   buildRipplePrompt,
@@ -26,41 +23,69 @@ import { ScheduleAgent } from './agents/schedule.agent';
 import { VenueAgent } from './agents/venue.agent';
 import { AuditorAgent } from './agents/auditor.agent';
 
+interface SpecialistAgents {
+  budget: BudgetAgent;
+  schedule: ScheduleAgent;
+  venue: VenueAgent;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AgentOrchestrator {
   private readonly store = inject(AgentStore);
   private readonly apiKeys = inject(ApiKeyService);
   private readonly planner = inject(PlannerAgent);
-  private readonly budget = inject(BudgetAgent);
-  private readonly schedule = inject(ScheduleAgent);
-  private readonly venue = inject(VenueAgent);
   private readonly auditor = inject(AuditorAgent);
+  private readonly specialists: SpecialistAgents = {
+    budget: inject(BudgetAgent),
+    schedule: inject(ScheduleAgent),
+    venue: inject(VenueAgent),
+  };
 
   private auditInFlight = false;
   private pendingAudit = false;
 
-  /**
-   * Run the full planner → specialists → auditor pipeline. Resets state,
-   * calls the planner, dispatches specialists in parallel, then the auditor
-   * cross-checks the rendered widgets.
-   */
+  private currentController: AbortController | null = null;
+
+  constructor() {
+    effect(() => {
+      if (!this.apiKeys.hasKey()) {
+        this.cancelInFlight();
+      }
+    });
+  }
+
+  /** Aborts any in-flight Gemini streams started by this orchestrator. */
+  cancelInFlight(): void {
+    this.currentController?.abort();
+    this.currentController = null;
+  }
+
+  private freshSignal(): AbortSignal {
+    this.currentController?.abort();
+    this.currentController = new AbortController();
+    return this.currentController.signal;
+  }
+
   async run(userIntent: string): Promise<void> {
     if (!this.apiKeys.hasKey()) throw new MissingApiKeyError();
     const trimmed = userIntent.trim();
     if (!trimmed) return;
 
+    const signal = this.freshSignal();
     this.store.resetForRun();
     this.store.setLastUserIntent(trimmed);
 
     let plan: PlannerOutput;
     try {
-      plan = await this.planner.plan(trimmed);
+      plan = await this.planner.plan(trimmed, signal);
       this.store.setPlannerRationale(plan.rationale);
     } catch {
+      if (signal.aborted) return;
       plan = this.fallbackPlan(trimmed);
       this.store.setPlannerRationale(
         'Planner unavailable — running all specialists on the raw brief.',
       );
+      this.store.setAgentStatus('planner', 'done');
     }
 
     for (const a of plan.agents) {
@@ -72,17 +97,15 @@ export class AgentOrchestrator {
 
     const tasks = plan.agents
       .filter((a) => a.needed && a.brief.trim().length > 0)
-      .map((a) => this.dispatch(a.id, a.brief));
+      .map((a) => this.dispatch(a.id, a.brief, undefined, signal));
 
     await Promise.allSettled(tasks);
-    await this.audit();
+    if (signal.aborted) return;
+    await this.audit(signal);
     this.store.touchRunWallEnded();
   }
 
-  /**
-   * Refine a single rendered widget. On success, marks downstream widgets
-   * stale (suggest-with-Update); does not auto-ripple or re-audit.
-   */
+  /** Marks downstream widgets stale on success; does not auto-ripple or re-audit. */
   async refine(widgetId: SpecialistId, deltaPrompt: string): Promise<void> {
     if (!this.apiKeys.hasKey()) throw new MissingApiKeyError();
     if (!deltaPrompt.trim()) return;
@@ -90,8 +113,9 @@ export class AgentOrchestrator {
     const existing = this.store.getWidget(widgetId);
     if (!existing) return;
 
+    const signal = this.freshSignal();
     this.store.clearAuditIssuesForTarget(widgetId);
-    const ok = await this.dispatch(widgetId, deltaPrompt, existing.payload.config);
+    const ok = await this.dispatch(widgetId, deltaPrompt, existing.payload.config, signal);
     if (ok) {
       for (const d of directDependentsOf(widgetId)) {
         if (this.store.getWidget(d)) this.store.markStale(d);
@@ -107,22 +131,24 @@ export class AgentOrchestrator {
     const existing = this.store.getWidget(issue.targetId);
     if (!existing) return;
 
+    const signal = this.freshSignal();
     const ok = await this.dispatch(
       issue.targetId,
       issue.autoBrief,
       existing.payload.config,
+      signal,
     );
-    if (ok) {
+    if (ok && !signal.aborted) {
       const downs = directDependentsOf(issue.targetId).filter((d) =>
         this.store.getWidget(d),
       );
       if (downs.length) {
         await Promise.allSettled(
-          downs.map((d) => this.rippleDispatch(issue.targetId, d)),
+          downs.map((d) => this.rippleDispatch(issue.targetId, d, signal)),
         );
       }
     }
-    await this.audit();
+    if (!signal.aborted) await this.audit(signal);
     this.store.touchRunWallEnded();
   }
 
@@ -145,29 +171,33 @@ export class AgentOrchestrator {
       return;
     }
 
+    const signal = this.freshSignal();
     const brief = buildMultiRipplePrompt(downstreamId, ups);
     const ok = await this.dispatch(
       downstreamId,
       brief,
       downstream.payload.config,
+      signal,
     );
-    if (ok) await this.audit();
+    if (ok && !signal.aborted) await this.audit(signal);
     this.store.touchRunWallEnded();
   }
 
   /** Manually re-run the auditor against the current dashboard. */
   async reAudit(): Promise<void> {
     if (!this.apiKeys.hasKey()) throw new MissingApiKeyError();
-    await this.audit();
+    const signal = this.freshSignal();
+    await this.audit(signal);
     this.store.touchRunWallEnded();
   }
 
   /** Re-dispatch a single agent using its last stored brief (error recovery). */
   async retryAgent(id: AgentId): Promise<void> {
     if (!this.apiKeys.hasKey()) throw new MissingApiKeyError();
+    const signal = this.freshSignal();
 
     if (id === 'auditor') {
-      await this.audit();
+      await this.audit(signal);
       return;
     }
 
@@ -175,13 +205,21 @@ export class AgentOrchestrator {
       const intent = this.store.lastUserIntent();
       if (!intent) return;
       try {
-        const plan = await this.planner.plan(intent);
+        const plan = await this.planner.plan(intent, signal);
         this.store.setPlannerRationale(plan.rationale);
         for (const a of plan.agents) {
           if (a.needed) this.store.setAgentBrief(a.id, a.brief);
         }
       } catch {
-        /* planner row shows error via agent state */
+        if (signal.aborted) return;
+        const fallback = this.fallbackPlan(intent);
+        this.store.setPlannerRationale(
+          'Planner unavailable — using the raw brief for all specialists.',
+        );
+        for (const a of fallback.agents) {
+          if (a.needed) this.store.setAgentBrief(a.id, a.brief);
+        }
+        this.store.setAgentStatus('planner', 'done');
       }
       this.store.touchRunWallEnded();
       return;
@@ -192,7 +230,7 @@ export class AgentOrchestrator {
 
     const existing = this.store.getWidget(id as SpecialistId);
     const prior = existing?.payload.config;
-    await this.dispatch(id as SpecialistId, brief, prior);
+    await this.dispatch(id as SpecialistId, brief, prior, signal);
     this.store.touchRunWallEnded();
   }
 
@@ -221,6 +259,7 @@ export class AgentOrchestrator {
   private async rippleDispatch(
     upstreamId: SpecialistId,
     downstreamId: SpecialistId,
+    signal?: AbortSignal,
   ): Promise<boolean> {
     const upstream = this.store.getWidget(upstreamId);
     const downstream = this.store.getWidget(downstreamId);
@@ -231,10 +270,10 @@ export class AgentOrchestrator {
       upstream.payload,
       downstreamId,
     );
-    return this.dispatch(downstreamId, brief, downstream.payload.config);
+    return this.dispatch(downstreamId, brief, downstream.payload.config, signal);
   }
 
-  private async audit(): Promise<void> {
+  private async audit(signal?: AbortSignal): Promise<void> {
     if (this.auditInFlight) {
       this.pendingAudit = true;
       return;
@@ -250,16 +289,16 @@ export class AgentOrchestrator {
     this.auditInFlight = true;
     this.store.setAgentStatus('auditor', 'pending');
     try {
-      const { value } = await this.auditor.run(intent, snapshot);
+      const { value } = await this.auditor.run(intent, snapshot, signal);
       this.store.setAuditResult(value.summary ?? '', value.issues ?? []);
     } catch {
       // Auditor failure is non-fatal — agent state already reflects error.
     } finally {
       this.auditInFlight = false;
       this.store.touchRunWallEnded();
-      if (this.pendingAudit) {
+      if (this.pendingAudit && !signal?.aborted) {
         this.pendingAudit = false;
-        await this.audit();
+        await this.audit(signal);
       }
     }
   }
@@ -268,30 +307,16 @@ export class AgentOrchestrator {
     id: SpecialistId,
     brief: string,
     prior?: unknown,
+    signal?: AbortSignal,
   ): Promise<boolean> {
     try {
-      const agent = this.specialistFor(id);
-      const { value, citations } = await agent.run(brief, prior);
-      const payload = intoComponentConfig(
-        id,
-        value as SpecialistResultMap[typeof id],
-      );
+      const { value, citations } = await this.specialists[id].run(brief, prior, signal);
+      const payload = intoComponentConfig(id, value);
       this.store.upsertWidget({ id, payload, citations });
       this.store.unmarkStale(id);
       return true;
     } catch {
       return false;
-    }
-  }
-
-  private specialistFor(id: SpecialistId) {
-    switch (id) {
-      case 'budget':
-        return this.budget;
-      case 'schedule':
-        return this.schedule;
-      case 'venue':
-        return this.venue;
     }
   }
 

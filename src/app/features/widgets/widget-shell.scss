@@ -1,3 +1,5 @@
+@use 'mixins' as m;
+
 dea-widget-shell {
   display: block;
   height: 100%;
@@ -12,7 +14,7 @@ dea-widget-shell {
   }
 
   &.shell-mode-error .card {
-    border-color: color-mix(in srgb, var(--dea-error) 35%, var(--dea-border));
+    border-color: m.blend(var(--dea-error), 35%, var(--dea-border));
   }
 
   &.shell-mode-ghost .card {
@@ -20,7 +22,7 @@ dea-widget-shell {
   }
 
   &.shell-stale .card {
-    border-color: color-mix(in srgb, var(--dea-warn) 45%, var(--dea-border));
+    border-color: m.blend(var(--dea-warn), 45%, var(--dea-border));
   }
 }
 
@@ -28,16 +30,9 @@ dea-widget-shell {
   position: relative;
   display: flex;
   flex-direction: column;
-  background: var(--dea-bg-elev-1);
-  border: 1px solid var(--dea-border);
-  border-radius: var(--dea-radius-xl);
-  overflow: hidden;
+  @include m.glass-surface($shadow: var(--dea-shadow-1), $blur: 16px, $saturate: 150%);
   height: 100%;
   min-height: 260px;
-  box-shadow: var(--dea-shadow-1);
-  backdrop-filter: blur(16px) saturate(150%);
-  -webkit-backdrop-filter: blur(16px) saturate(150%);
-  isolation: isolate;
   transition:
     box-shadow var(--dea-transition),
     transform var(--dea-transition),
@@ -84,9 +79,7 @@ dea-widget-shell {
     background: var(--dea-gradient-brand-soft);
     border-radius: 50%;
     padding: 5px;
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
+    @include m.sized-icon(16);
     box-shadow: 0 2px 6px -2px var(--dea-accent-glow);
   }
 
@@ -124,34 +117,25 @@ dea-widget-shell {
   color: var(--dea-fg-muted);
 
   mat-icon {
-    font-size: 13px;
-    width: 13px;
-    height: 13px;
+    @include m.sized-icon(13);
   }
 }
 
 .ghost-pill {
-  color: var(--dea-accent);
-  border-color: color-mix(in srgb, var(--dea-accent) 35%, var(--dea-border));
-  background: color-mix(in srgb, var(--dea-accent) 10%, transparent);
+  @include m.tinted-pill(var(--dea-accent), $bg: 10%);
   animation: pulseSoft 2s ease-in-out infinite;
 }
 
 .done-pill {
-  color: var(--dea-success);
-  border-color: color-mix(in srgb, var(--dea-success) 35%, var(--dea-border));
-  background: color-mix(in srgb, var(--dea-success) 12%, transparent);
+  @include m.tinted-pill(var(--dea-success));
 }
 
 .error-pill {
-  color: var(--dea-error);
-  border-color: color-mix(in srgb, var(--dea-error) 35%, var(--dea-border));
-  background: color-mix(in srgb, var(--dea-error) 12%, transparent);
+  @include m.tinted-pill(var(--dea-error));
 }
 
 .streaming-bar {
-  --mdc-linear-progress-track-height: 2px;
-  --mdc-linear-progress-active-indicator-height: 2px;
+  @include m.progress-thin;
 }
 
 .stale-banner {
@@ -160,14 +144,12 @@ dea-widget-shell {
   flex-wrap: wrap;
   gap: 10px 12px;
   padding: 12px 16px;
-  border-bottom: 1px solid color-mix(in srgb, var(--dea-warn) 35%, var(--dea-border));
-  background: color-mix(in srgb, var(--dea-warn) 14%, var(--dea-bg-elev-1));
+  border-bottom: 1px solid m.blend(var(--dea-warn), 35%, var(--dea-border));
+  background: m.blend(var(--dea-warn), 14%, var(--dea-bg-elev-1));
 
   mat-icon {
     color: var(--dea-warn);
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
+    @include m.sized-icon(18);
     flex-shrink: 0;
   }
 
@@ -188,9 +170,7 @@ dea-widget-shell {
 
     mat-icon {
       color: inherit;
-      font-size: 15px;
-      width: 15px;
-      height: 15px;
+      @include m.sized-icon(15);
       margin-right: 4px;
     }
   }
@@ -214,7 +194,7 @@ dea-widget-shell {
   background: linear-gradient(
     180deg,
     transparent,
-    color-mix(in srgb, var(--dea-bg-elev-2) 70%, transparent)
+    m.blend(var(--dea-bg-elev-2), 70%, transparent)
   );
 }
 
@@ -234,9 +214,9 @@ dea-widget-shell {
   border-radius: 6px;
   background: linear-gradient(
     90deg,
-    color-mix(in srgb, var(--dea-bg-elev-2) 80%, transparent) 0%,
-    color-mix(in srgb, var(--dea-accent) 12%, var(--dea-bg-elev-2)) 50%,
-    color-mix(in srgb, var(--dea-bg-elev-2) 80%, transparent) 100%
+    m.blend(var(--dea-bg-elev-2), 80%, transparent) 0%,
+    m.blend(var(--dea-accent), 12%, var(--dea-bg-elev-2)) 50%,
+    m.blend(var(--dea-bg-elev-2), 80%, transparent) 100%
   );
   background-size: 200% 100%;
   animation: shimmerSlide 1.4s linear infinite;
@@ -252,15 +232,13 @@ dea-widget-shell {
   align-items: flex-start;
   gap: 10px;
   padding: 14px;
-  border: 1px dashed color-mix(in srgb, var(--dea-error) 35%, var(--dea-border));
+  border: 1px dashed m.blend(var(--dea-error), 35%, var(--dea-border));
   border-radius: var(--dea-radius-md);
-  background: color-mix(in srgb, var(--dea-error) 8%, transparent);
+  background: m.tint(var(--dea-error), 8%);
   color: var(--dea-error);
 
   mat-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
+    @include m.sized-icon(20);
   }
 
   p {
@@ -292,7 +270,7 @@ dea-widget-shell {
   50% { opacity: 0.55; }
 }
 
-@media (max-width: 720px) {
+@include m.mobile {
   .card {
     border-radius: var(--dea-radius-lg);
     min-height: 220px;

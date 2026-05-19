@@ -1,30 +1,33 @@
 import { inject } from '@angular/core';
-import {
+import type {
+  GenerateContentResponse,
+  GenerateContentResponseUsageMetadata,
   GoogleGenAI,
-  ThinkingLevel,
-  type GenerateContentResponse,
-  type GenerateContentResponseUsageMetadata,
-  type GroundingChunk,
-  type Schema,
+  GroundingChunk,
+  Schema,
+  ThinkingLevel as SdkThinkingLevel,
 } from '@google/genai';
+import { loadGenaiSdk } from '../genai-loader';
 import { usageFromMetadata } from '../gemini-pricing';
+import { buildRefinePrompt } from '../gemini.prompts';
 import { ApiKeyService } from '../../auth/api-key.service';
 import { AgentStore } from '../../state/agent.store';
-import {
-  AgentId,
-  classifyApiError,
-  MissingApiKeyError,
-} from '../../types/agent.types';
+import { AgentId, MissingApiKeyError } from '../../types/agent.types';
 import { Citation } from '../../types/widget.types';
 
-export interface RunStreamedOptions {
+const ThinkingLevel = {
+  LOW: 'LOW' as SdkThinkingLevel,
+} as const;
+
+interface RunStreamedOptions {
   contents: string;
   systemInstruction: string;
   schema: Schema;
   ground?: boolean;
+  signal?: AbortSignal;
 }
 
-export interface RunStreamedResult<T> {
+export interface AgentRunResult<T> {
   value: T;
   citations?: Citation[];
 }
@@ -38,11 +41,12 @@ export abstract class AgentBase {
   private _client: GoogleGenAI | null = null;
   private _clientKey: string | null = null;
 
-  protected lazyClient(): GoogleGenAI {
+  protected async lazyClient(): Promise<GoogleGenAI> {
     const key = this.apiKeys.key();
     if (!key) throw new MissingApiKeyError();
     if (!this._client || this._clientKey !== key) {
-      this._client = new GoogleGenAI({ apiKey: key });
+      const sdk = await loadGenaiSdk();
+      this._client = new sdk.GoogleGenAI({ apiKey: key });
       this._clientKey = key;
     }
     return this._client;
@@ -50,7 +54,7 @@ export abstract class AgentBase {
 
   protected async runStreamed<T>(
     opts: RunStreamedOptions,
-  ): Promise<RunStreamedResult<T>> {
+  ): Promise<AgentRunResult<T>> {
     this.store.setAgentStatus(this.id, 'thinking');
 
     let buffer = '';
@@ -59,7 +63,9 @@ export abstract class AgentBase {
     const model = this.apiKeys.model();
 
     try {
-      const stream = await this.lazyClient().models.generateContentStream({
+      const client = await this.lazyClient();
+      opts.signal?.throwIfAborted();
+      const stream = await client.models.generateContentStream({
         model,
         contents: opts.contents,
         config: {
@@ -68,6 +74,7 @@ export abstract class AgentBase {
           responseSchema: opts.schema,
           thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
           tools: opts.ground ? [{ googleSearch: {} }] : undefined,
+          abortSignal: opts.signal,
         },
       });
 
@@ -99,17 +106,33 @@ export abstract class AgentBase {
       if (usage) this.store.recordAgentUsage(this.id, usage, model);
       const message = err instanceof Error ? err.message : String(err);
       this.store.setAgentStatus(this.id, 'error', message);
-      (err as { __dea_class?: string }).__dea_class = classifyApiError(err);
       throw err;
     }
   }
 }
 
-/**
- * Parse the model's accumulated JSON. Strict first; if `allowTolerant` is set
- * (used for grounded calls, where prose can leak around the JSON), fall back
- * to stripping markdown fences and slicing between the outermost braces.
- */
+/** Brief-in / structured-JSON-out shape shared by Budget, Schedule, Venue. */
+export abstract class SpecialistAgentBase<T> extends AgentBase {
+  protected abstract readonly systemInstruction: string;
+  protected abstract readonly schema: Schema;
+  protected readonly ground: boolean = false;
+
+  async run(
+    brief: string,
+    prior?: unknown,
+    signal?: AbortSignal,
+  ): Promise<AgentRunResult<T>> {
+    return this.runStreamed<T>({
+      contents: prior ? buildRefinePrompt(prior, brief) : brief,
+      systemInstruction: this.systemInstruction,
+      schema: this.schema,
+      ground: this.ground,
+      signal,
+    });
+  }
+}
+
+/** Strict by default; tolerant mode strips ```json fences and carves the outer `{...}` block. */
 export function parseJsonResponse<T>(raw: string, allowTolerant: boolean): T {
   const trimmed = raw.trim();
   try {

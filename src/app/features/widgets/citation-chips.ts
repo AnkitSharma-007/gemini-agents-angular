@@ -21,7 +21,7 @@ import { Citation } from '../../core/types/widget.types';
               mat-chip
               [href]="c.uri"
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               [matTooltip]="c.title"
               matTooltipPosition="above"
             >

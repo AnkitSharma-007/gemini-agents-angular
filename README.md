@@ -45,10 +45,13 @@ into Angular components in real time.
    payload as context, so the other widgets never blink.
 8. **Google Search grounding** — the Schedule and Venue agents are grounded
    on Google Search and surface real source citations on the rendered cards.
-9. **BYOK** — the user pastes their own Gemini API key once. It is validated
+9. **Starter prompts + theme toggle** — a row of one-click sample briefs
+   (product launch, hackathon, retreat) plus a header light/dark switch with
+   `prefers-color-scheme` defaulting; both persist in `localStorage`.
+10. **BYOK** — the user pastes their own Gemini API key once. It is validated
    against `models.list`, stored in `localStorage`, and never leaves their
    browser.
-10. **Zoneless Angular 21 + Signals** — `provideZonelessChangeDetection`,
+11. **Zoneless Angular 21 + Signals** — `provideZonelessChangeDetection`,
    signal inputs everywhere, `OnPush` throughout, and a slot-based renderer
    that reacts to a joint `(agentStates, widgets)` view of the store.
 
@@ -123,7 +126,7 @@ stream into the dashboard in parallel, then the Auditor reviews them.
 ### Other commands
 
 ```bash
-npm run build      # production build (193 kB gzip initial transfer)
+npm run build      # production build (~203 kB gzip initial transfer)
 npm test           # vitest, runs in watch mode by default
 npm test -- --watch=false   # one-shot test run
 ```
@@ -136,7 +139,7 @@ npm test -- --watch=false   # one-shot test run
 | -- | --- | --- |
 | 0s | App loads, BYOK empty state visible. | "No backend — the user owns the key." |
 | 3s | Click **Connect Gemini key**, paste key, **Save & Validate**. | "Validated against `models.list` before we trust it." |
-| 8s | Click **Try the demo prompt** chip → click **Architect Dashboard**. | "One sentence in." |
+| 8s | Click the **Demo prompt** chip (or any starter chip) → click **Architect Dashboard**. | "One sentence in." |
 | 9s | Watch **Mission Control** light up: planner → three specialists in parallel. | "Five agents collaborating live." |
 | 12s | Three ghost slots appear, then fill in as each agent finishes. | "Slot-based renderer — each widget materialises independently." |
 | 16s | **Auditor row** in Mission Control flips to thinking → done; **Audit ribbon** appears above the grid. | "A fifth agent reviews the other three for cross-widget inconsistencies." |

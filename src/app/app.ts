@@ -8,7 +8,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ApiKeyDialog } from './core/auth/api-key.dialog';
 import { ApiKeyService } from './core/auth/api-key.service';
 import { AgentStore } from './core/state/agent.store';
 import { ThemeService } from './core/theme/theme.service';
@@ -51,7 +50,8 @@ export class App {
     this.mode() === 'fast' ? 'Fast' : 'Quality',
   );
 
-  protected openKeyDialog(): void {
+  protected async openKeyDialog(): Promise<void> {
+    const { ApiKeyDialog } = await import('./core/auth/api-key.dialog');
     this.dialog.open(ApiKeyDialog, {
       autoFocus: 'first-tabbable',
       restoreFocus: true,

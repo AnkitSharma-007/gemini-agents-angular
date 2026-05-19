@@ -1,3 +1,5 @@
+@use 'mixins' as m;
+
 :host {
   display: block;
   width: 100%;
@@ -28,15 +30,6 @@
   font-size: 13px;
   line-height: 1.55;
   color: var(--dea-fg-muted);
-
-  code {
-    background: var(--dea-bg-elev-2);
-    border: 1px solid var(--dea-border);
-    padding: 1px 6px;
-    border-radius: 4px;
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 12px;
-  }
 }
 
 .key-field {
@@ -77,8 +70,8 @@
   align-items: flex-start;
   gap: 10px;
   padding: 10px 12px;
-  background: color-mix(in srgb, var(--dea-error) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--dea-error) 35%, transparent);
+  background: m.tint(var(--dea-error), 12%);
+  border: 1px solid m.tint(var(--dea-error), 35%);
   border-radius: var(--dea-radius-md);
   color: var(--dea-error);
   font-size: 13px;
@@ -93,9 +86,7 @@
   }
 
   mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
+    @include m.sized-icon(18);
     margin-top: 1px;
     flex-shrink: 0;
   }
@@ -114,7 +105,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@include m.mobile-xs {
   .dialog-body {
     gap: 14px;
   }

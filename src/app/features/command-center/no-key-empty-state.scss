@@ -1,3 +1,5 @@
+@use 'mixins' as m;
+
 :host {
   display: block;
 }
@@ -16,14 +18,7 @@
   margin: 0 auto;
   padding: 56px 36px 44px;
   text-align: center;
-  background: var(--dea-bg-elev-1);
-  border: 1px solid var(--dea-border);
-  border-radius: var(--dea-radius-xl);
-  box-shadow: var(--dea-shadow-2);
-  backdrop-filter: blur(18px) saturate(160%);
-  -webkit-backdrop-filter: blur(18px) saturate(160%);
-  overflow: hidden;
-  isolation: isolate;
+  @include m.glass-surface;
 }
 
 .aurora {
@@ -45,7 +40,7 @@
   place-items: center;
   background: var(--dea-gradient-brand);
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--dea-accent) 30%, transparent),
+    0 0 0 1px m.tint(var(--dea-accent), 30%),
     0 16px 36px -10px var(--dea-accent-glow);
   position: relative;
 
@@ -54,16 +49,14 @@
     position: absolute;
     inset: 2px;
     border-radius: 20px;
-    background: color-mix(in srgb, var(--dea-bg-solid-1) 25%, transparent);
+    background: m.blend(var(--dea-bg-solid-1), 25%, transparent);
     backdrop-filter: blur(6px);
   }
 
   mat-icon {
     position: relative;
     z-index: 1;
-    font-size: 34px;
-    width: 34px;
-    height: 34px;
+    @include m.sized-icon(34);
     color: #fff;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
   }
@@ -77,28 +70,12 @@ h2 {
   letter-spacing: -0.015em;
 }
 
-.brand-gradient {
-  background: var(--dea-gradient-brand);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
 p {
   color: var(--dea-fg-muted);
   line-height: 1.6;
   margin: 0 auto 28px;
   max-width: 480px;
   font-size: 14px;
-
-  code {
-    background: var(--dea-bg-elev-2);
-    border: 1px solid var(--dea-border);
-    padding: 1px 6px;
-    border-radius: 4px;
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 0.9em;
-  }
 }
 
 .features {
@@ -115,7 +92,7 @@ p {
   gap: 6px;
   padding: 6px 12px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--dea-bg-elev-2) 70%, transparent);
+  background: m.blend(var(--dea-bg-elev-2), 70%, transparent);
   border: 1px solid var(--dea-border);
   font-size: 11.5px;
   color: var(--dea-fg-muted);
@@ -123,9 +100,7 @@ p {
 
   mat-icon {
     color: var(--dea-accent);
-    font-size: 14px;
-    width: 14px;
-    height: 14px;
+    @include m.sized-icon(14);
   }
 }
 
@@ -142,8 +117,7 @@ p {
   border-radius: 999px;
   font-weight: 600;
   font-size: 14px;
-  background: var(--dea-gradient-brand);
-  color: #fff;
+  @include m.brand-pill;
   box-shadow:
     0 8px 24px -6px var(--dea-accent-glow),
     inset 0 1px 0 rgba(255, 255, 255, 0.18);
@@ -160,7 +134,6 @@ p {
 
   mat-icon {
     margin-right: 8px;
-    color: #fff;
   }
 }
 
@@ -180,13 +153,11 @@ p {
   }
 
   mat-icon {
-    font-size: 14px;
-    width: 14px;
-    height: 14px;
+    @include m.sized-icon(14);
   }
 }
 
-@media (max-width: 720px) {
+@include m.mobile {
   .empty {
     padding: 24px 16px 48px;
     min-height: auto;
@@ -204,9 +175,7 @@ p {
     margin-bottom: 18px;
 
     mat-icon {
-      font-size: 28px;
-      width: 28px;
-      height: 28px;
+      @include m.sized-icon(28);
     }
   }
 

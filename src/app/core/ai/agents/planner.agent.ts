@@ -13,11 +13,12 @@ export class PlannerAgent extends AgentBase {
    * agent or returns an unknown id, the missing slot is backfilled with
    * `needed: false` so downstream code can rely on a complete set of three.
    */
-  async plan(userIntent: string): Promise<PlannerOutput> {
+  async plan(userIntent: string, signal?: AbortSignal): Promise<PlannerOutput> {
     const { value } = await this.runStreamed<PlannerOutput>({
       contents: userIntent,
       systemInstruction: PLANNER_SYSTEM,
       schema: PLANNER_SCHEMA,
+      signal,
     });
 
     const byId = new Map(value.agents?.map((a) => [a.id, a]) ?? []);

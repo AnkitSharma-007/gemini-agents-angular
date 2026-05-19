@@ -1,3 +1,5 @@
+@use 'mixins' as m;
+
 :host {
   display: block;
   height: 100%;
@@ -9,15 +11,8 @@
   flex-direction: column;
   gap: 16px;
   padding: 20px;
-  background: var(--dea-bg-elev-1);
-  border: 1px solid var(--dea-border);
-  border-radius: var(--dea-radius-xl);
+  @include m.glass-surface($saturate: 150%);
   height: 100%;
-  box-shadow: var(--dea-shadow-2);
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-  overflow: hidden;
-  isolation: isolate;
 
   &::before {
     content: '';
@@ -34,7 +29,6 @@
   }
 }
 
-/* --------------------------------------------------------------- Header */
 .tower-head {
   display: flex;
   align-items: center;
@@ -44,11 +38,9 @@
 
   h2 {
     margin: 0;
-    font-size: 13px;
+    @include m.eyebrow($size: 13px, $color: var(--dea-fg));
     font-weight: 700;
-    text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--dea-fg);
   }
 
   .title-line {
@@ -74,16 +66,14 @@
     border-color: var(--dea-border-strong);
 
     mat-icon {
-      font-size: 15px;
-      width: 15px;
-      height: 15px;
+      @include m.sized-icon(15);
       margin-right: 4px;
       color: var(--dea-accent);
     }
 
     &:hover:not([disabled]) {
-      border-color: color-mix(in srgb, var(--dea-accent) 55%, var(--dea-border-strong));
-      background: color-mix(in srgb, var(--dea-accent) 8%, transparent);
+      border-color: m.blend(var(--dea-accent), 55%, var(--dea-border-strong));
+      background: m.tint(var(--dea-accent), 8%);
     }
   }
 
@@ -113,29 +103,22 @@
 
   &.state-planning,
   &.state-running {
-    color: var(--dea-success);
-    border-color: color-mix(in srgb, var(--dea-success) 45%, transparent);
-    background: color-mix(in srgb, var(--dea-success) 14%, transparent);
+    @include m.tinted-pill(var(--dea-success), $bg: 14%, $border: 45%);
   }
 
   &.state-done {
-    color: var(--dea-accent);
-    border-color: color-mix(in srgb, var(--dea-accent) 45%, transparent);
-    background: color-mix(in srgb, var(--dea-accent) 12%, transparent);
+    @include m.tinted-pill(var(--dea-accent), $bg: 12%, $border: 45%);
   }
 
   &.state-error {
-    color: var(--dea-error);
-    border-color: color-mix(in srgb, var(--dea-error) 45%, transparent);
-    background: color-mix(in srgb, var(--dea-error) 12%, transparent);
+    @include m.tinted-pill(var(--dea-error), $bg: 12%, $border: 45%);
   }
 }
 
-/* ----------------------------------------------------------- Rationale */
 .rationale {
   margin: 0;
   padding: 13px 15px;
-  background: color-mix(in srgb, var(--dea-bg-elev-2) 75%, transparent);
+  background: m.blend(var(--dea-bg-elev-2), 75%, transparent);
   border: 1px solid var(--dea-border);
   border-left: 3px solid var(--dea-accent);
   border-radius: var(--dea-radius-md);
@@ -145,9 +128,7 @@
 
   mat-icon {
     color: var(--dea-accent);
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
+    @include m.sized-icon(16);
     margin-right: 4px;
     vertical-align: -3px;
   }
@@ -159,11 +140,8 @@
   }
 }
 
-/* --------------------------------------------------------------- Rows */
 .rows {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  @include m.list-unstyled;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -181,7 +159,7 @@
   padding: 10px 12px;
   border: 1px solid var(--dea-border);
   border-radius: var(--dea-radius-md);
-  background: color-mix(in srgb, var(--dea-bg-elev-2) 55%, transparent);
+  background: m.blend(var(--dea-bg-elev-2), 55%, transparent);
   transition:
     border-color var(--dea-transition),
     background var(--dea-transition),
@@ -193,18 +171,18 @@
 }
 
 .row-live {
-  border-color: color-mix(in srgb, var(--dea-success) 45%, transparent);
-  background: color-mix(in srgb, var(--dea-success) 10%, transparent);
+  border-color: m.blend(var(--dea-success), 45%, transparent);
+  background: m.tint(var(--dea-success), 10%);
 }
 
 .row-done {
-  border-color: color-mix(in srgb, var(--dea-accent) 35%, var(--dea-border));
-  background: color-mix(in srgb, var(--dea-accent) 5%, transparent);
+  border-color: m.blend(var(--dea-accent), 35%, var(--dea-border));
+  background: m.tint(var(--dea-accent), 5%);
 }
 
 .row-error {
-  border-color: color-mix(in srgb, var(--dea-error) 35%, var(--dea-border));
-  background: color-mix(in srgb, var(--dea-error) 7%, transparent);
+  border-color: m.blend(var(--dea-error), 35%, var(--dea-border));
+  background: m.tint(var(--dea-error), 7%);
 }
 
 .rail {
@@ -217,9 +195,7 @@
   border: 1px solid var(--dea-border);
 
   mat-icon {
-    font-size: 15px;
-    width: 15px;
-    height: 15px;
+    @include m.sized-icon(15);
 
     &.check { color: var(--dea-success); }
     &.err { color: var(--dea-error); }
@@ -229,12 +205,12 @@
 }
 
 .row-done .rail {
-  border-color: color-mix(in srgb, var(--dea-accent) 35%, var(--dea-border));
-  background: color-mix(in srgb, var(--dea-accent) 14%, var(--dea-bg-elev-2));
+  border-color: m.blend(var(--dea-accent), 35%, var(--dea-border));
+  background: m.blend(var(--dea-accent), 14%, var(--dea-bg-elev-2));
 }
 
 .row-live .rail {
-  border-color: color-mix(in srgb, var(--dea-success) 50%, var(--dea-border));
+  border-color: m.blend(var(--dea-success), 50%, var(--dea-border));
 }
 
 .info {
@@ -264,21 +240,17 @@
   flex-shrink: 0;
 }
 
-.duration,
-.tokens {
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: 10.5px;
-  color: var(--dea-fg-muted);
-  font-variant-numeric: tabular-nums;
+.duration {
+  @include m.mono-tabular;
 }
 
 .tokens {
-  color: var(--dea-accent);
+  @include m.mono-tabular($color: var(--dea-accent));
   cursor: default;
   padding: 2px 7px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--dea-accent) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--dea-accent) 25%, transparent);
+  background: m.tint(var(--dea-accent), 12%);
+  border: 1px solid m.tint(var(--dea-accent), 25%);
 }
 
 .info-bottom {
@@ -290,10 +262,7 @@
 }
 
 .status {
-  color: var(--dea-fg-muted);
-  font-size: 10.5px;
-  font-weight: 600;
-  text-transform: uppercase;
+  @include m.eyebrow($size: 10.5px);
   letter-spacing: 0.07em;
 
   &.status-streaming,
@@ -325,14 +294,11 @@
   border-color: var(--dea-border-strong);
 
   mat-icon {
-    font-size: 13px;
-    width: 13px;
-    height: 13px;
+    @include m.sized-icon(13);
     margin-right: 3px;
   }
 }
 
-/* --------------------------------------------------------- Telemetry */
 .telemetry-bar {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -341,20 +307,18 @@
   row-gap: 4px;
   margin-top: auto;
   padding: 12px 14px;
-  border: 1px solid color-mix(in srgb, var(--dea-accent) 22%, var(--dea-border));
+  border: 1px solid m.blend(var(--dea-accent), 22%, var(--dea-border));
   border-radius: var(--dea-radius-md);
   background:
     linear-gradient(
       135deg,
-      color-mix(in srgb, var(--dea-accent) 12%, transparent),
-      color-mix(in srgb, var(--dea-accent-2, var(--dea-accent)) 8%, transparent)
+      m.tint(var(--dea-accent), 12%),
+      m.tint(var(--dea-accent-2, var(--dea-accent)), 8%)
     );
 
   > mat-icon {
     grid-row: 1 / 3;
-    font-size: 22px;
-    width: 22px;
-    height: 22px;
+    @include m.sized-icon(22);
     color: var(--dea-accent);
     flex-shrink: 0;
   }
@@ -388,7 +352,7 @@
 
 @keyframes livePulse {
   0% {
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--dea-success) 65%, transparent);
+    box-shadow: 0 0 0 0 m.tint(var(--dea-success), 65%);
   }
   70% {
     box-shadow: 0 0 0 10px transparent;
@@ -398,8 +362,7 @@
   }
 }
 
-/* ------------------------------------------------------- Mobile breakpoints */
-@media (max-width: 900px) {
+@include m.tablet-down {
   .tower {
     padding: 18px;
     gap: 14px;
@@ -410,7 +373,7 @@
   }
 }
 
-@media (max-width: 720px) {
+@include m.mobile {
   .tower {
     padding: 16px;
     gap: 14px;

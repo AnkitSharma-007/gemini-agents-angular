@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AgentBase, RunStreamedResult } from './agent-base';
+import { AgentBase, AgentRunResult } from './agent-base';
 import { AUDITOR_SCHEMA } from '../gemini.schemas';
 import {
   AUDITOR_SYSTEM,
@@ -15,12 +15,13 @@ export class AuditorAgent extends AgentBase {
   async run(
     userIntent: string,
     widgetSnapshot: AuditableWidgets,
-  ): Promise<RunStreamedResult<AuditorOutput>> {
+    signal?: AbortSignal,
+  ): Promise<AgentRunResult<AuditorOutput>> {
     return this.runStreamed<AuditorOutput>({
       contents: buildAuditorContents(userIntent, widgetSnapshot),
       systemInstruction: AUDITOR_SYSTEM,
       schema: AUDITOR_SCHEMA,
-      ground: false,
+      signal,
     });
   }
 }

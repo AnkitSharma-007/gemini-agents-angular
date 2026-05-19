@@ -1,3 +1,5 @@
+@use 'mixins' as m;
+
 :host {
   display: block;
   height: 100%;
@@ -17,19 +19,15 @@
   padding: 14px 16px;
   background: linear-gradient(
     135deg,
-    color-mix(in srgb, var(--dea-accent) 12%, transparent),
+    m.tint(var(--dea-accent), 12%),
     transparent 70%
   );
-  border: 1px solid color-mix(in srgb, var(--dea-accent) 25%, var(--dea-border));
+  border: 1px solid m.blend(var(--dea-accent), 25%, var(--dea-border));
   border-radius: var(--dea-radius-md);
 
   .label {
     display: block;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--dea-fg-muted);
+    @include m.eyebrow;
   }
 
   .amount {
@@ -47,9 +45,7 @@
 }
 
 .lines {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  @include m.list-unstyled;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -89,8 +85,7 @@
 }
 
 mat-progress-bar {
-  --mdc-linear-progress-track-height: 6px;
-  --mdc-linear-progress-active-indicator-height: 6px;
+  @include m.progress-thin($height: 6px);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -102,7 +97,7 @@ mat-progress-bar {
   line-height: 1.5;
 }
 
-@media (max-width: 480px) {
+@include m.mobile-xs {
   .totals {
     grid-template-columns: 1fr;
     gap: 8px;

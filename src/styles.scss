@@ -1,4 +1,5 @@
 @use '@angular/material' as mat;
+@use 'mixins' as m;
 
 html {
   color-scheme: dark;
@@ -27,18 +28,15 @@ html {
   --dea-fg-subtle: #6a7088;
   --dea-accent: #b69aff;
   --dea-accent-2: #6ee7f2;
-  --dea-accent-3: #ff9ad9;
   --dea-accent-glow: rgba(182, 154, 255, 0.42);
   --dea-success: #5dd6a4;
   --dea-warn: #ffb86b;
   --dea-error: #ff6b8a;
-  --dea-radius-sm: 8px;
   --dea-radius-md: 14px;
   --dea-radius-lg: 20px;
   --dea-radius-xl: 28px;
   --dea-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
   --dea-shadow-2: 0 1px 2px rgba(0, 0, 0, 0.4), 0 20px 50px rgba(0, 0, 0, 0.45);
-  --dea-glow: 0 0 0 1px rgba(182, 154, 255, 0.32), 0 0 60px -10px rgba(182, 154, 255, 0.45);
   --dea-transition: 220ms cubic-bezier(0.2, 0, 0, 1);
 
   --dea-gradient-brand: linear-gradient(135deg, #b69aff 0%, #6ee7f2 55%, #ff9ad9 100%);
@@ -85,14 +83,12 @@ html.theme-light {
   --dea-fg-subtle: #7a8198;
   --dea-accent: #6b3df5;
   --dea-accent-2: #11a8b5;
-  --dea-accent-3: #cf3aa1;
   --dea-accent-glow: rgba(107, 61, 245, 0.22);
   --dea-success: #0e8a5b;
   --dea-warn: #b86a07;
   --dea-error: #c2335a;
   --dea-shadow-1: 0 1px 2px rgba(15, 18, 30, 0.06), 0 10px 24px rgba(15, 18, 30, 0.08);
   --dea-shadow-2: 0 1px 2px rgba(15, 18, 30, 0.06), 0 22px 50px rgba(15, 18, 30, 0.12);
-  --dea-glow: 0 0 0 1px rgba(107, 61, 245, 0.28), 0 0 60px -10px rgba(107, 61, 245, 0.35);
 
   --dea-gradient-brand: linear-gradient(135deg, #6b3df5 0%, #11a8b5 55%, #cf3aa1 100%);
   --dea-gradient-brand-soft: linear-gradient(
@@ -145,30 +141,41 @@ a {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--dea-accent) 35%, transparent);
+  background: m.tint(var(--dea-accent), 35%);
   color: var(--dea-fg);
 }
 
-/* Scrollbar polish (Webkit) */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 ::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--dea-fg-muted) 35%, transparent);
+  background: m.tint(var(--dea-fg-muted), 35%);
   border-radius: 999px;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in srgb, var(--dea-fg-muted) 55%, transparent);
+  background: m.tint(var(--dea-fg-muted), 55%);
   background-clip: padding-box;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 
-/* Reduced motion: tone down decorative animations app-wide. */
+.brand-gradient {
+  @include m.brand-text-gradient;
+}
+
+code {
+  background: var(--dea-bg-elev-2);
+  border: 1px solid var(--dea-border);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 12px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

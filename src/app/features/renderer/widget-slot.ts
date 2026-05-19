@@ -7,6 +7,7 @@ import {
   inject,
   input,
   OnDestroy,
+  Type,
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
@@ -14,7 +15,7 @@ import { AgentStore } from '../../core/state/agent.store';
 import { SpecialistId } from '../../core/types/agent.types';
 import { WidgetEntry } from '../../core/types/widget.types';
 import { WidgetShell } from '../widgets/widget-shell';
-import { WIDGET_REGISTRY } from './widget-registry';
+import { loadWidget } from './widget-registry';
 
 type SlotMode = 'ghost' | 'real' | 'error';
 
@@ -47,7 +48,8 @@ export class WidgetSlot implements OnDestroy {
   private anchor?: ViewContainerRef;
 
   private componentRef: ComponentRef<unknown> | null = null;
-  private currentSlotComponentType: unknown = null;
+  private componentType: Type<unknown> | null = null;
+  private loadInFlight: Promise<void> | null = null;
   private lastSeenGeneration = 0;
 
   protected readonly widget = computed<WidgetEntry | undefined>(
@@ -70,7 +72,6 @@ export class WidgetSlot implements OnDestroy {
         return;
       }
 
-      // Anchor only exists once @if has rendered; defer one tick if needed.
       if (!this.anchor) {
         queueMicrotask(() => this.materialiseOrUpdate(id, w));
         return;
@@ -79,7 +80,6 @@ export class WidgetSlot implements OnDestroy {
     });
 
     effect(() => {
-      const id = this.slotId();
       this.store.staleWidgets();
       if (this.widget() && this.componentRef) {
         this.componentRef.changeDetectorRef.markForCheck();
@@ -94,14 +94,34 @@ export class WidgetSlot implements OnDestroy {
   private materialiseOrUpdate(id: SpecialistId, w: WidgetEntry): void {
     if (!this.anchor) return;
 
-    const expectedType = WIDGET_REGISTRY[id];
-    if (!this.componentRef || this.currentSlotComponentType !== expectedType) {
-      this.destroyInstance();
-      this.componentRef = this.anchor.createComponent(expectedType);
-      this.currentSlotComponentType = expectedType;
+    if (this.componentRef && this.componentType) {
+      this.applyInputs(this.componentRef, id, w);
+      return;
     }
 
-    const ref = this.componentRef!;
+    if (this.loadInFlight) return;
+
+    this.loadInFlight = (async () => {
+      try {
+        const componentType = await loadWidget(id);
+        if (!this.anchor) return;
+        const current = this.widget();
+        if (!current) return;
+
+        this.componentType = componentType;
+        this.componentRef = this.anchor.createComponent(componentType);
+        this.applyInputs(this.componentRef, id, current);
+      } finally {
+        this.loadInFlight = null;
+      }
+    })();
+  }
+
+  private applyInputs(
+    ref: ComponentRef<unknown>,
+    id: SpecialistId,
+    w: WidgetEntry,
+  ): void {
     ref.setInput('widgetId', id);
     ref.setInput('title', w.payload.title);
     ref.setInput('config', w.payload.config);
@@ -117,7 +137,6 @@ export class WidgetSlot implements OnDestroy {
     if (this.componentRef) {
       this.componentRef.destroy();
       this.componentRef = null;
-      this.currentSlotComponentType = null;
     }
     if (this.anchor) {
       this.anchor.clear();
