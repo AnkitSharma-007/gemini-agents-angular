@@ -1,13 +1,25 @@
+<div class="dialog-aurora" aria-hidden="true"></div>
+
 <h2 mat-dialog-title class="dialog-title">
-  <mat-icon aria-hidden="true">key</mat-icon>
-  Connect your Gemini API key
+  <span class="title-badge" aria-hidden="true">
+    <mat-icon>key</mat-icon>
+  </span>
+  <span class="title-text">
+    <span class="title-eyebrow">Bring your own key</span>
+    <span class="title-heading">
+      Connect your <span class="brand-gradient">Gemini</span> key
+    </span>
+  </span>
 </h2>
 
 <mat-dialog-content class="dialog-body">
   <p class="privacy">
-    Your API key is stored only in this browser's <code>localStorage</code>. It
-    is sent directly from your browser to Google's Gemini API and never reaches
-    any server we control. You can clear it any time from the top bar.
+    <mat-icon aria-hidden="true">shield_lock</mat-icon>
+    <span>
+      Your key is stored only in this browser's <code>localStorage</code> and
+      sent straight from this tab to Google's Gemini API — no backend in
+      between. Clear it any time from the top bar.
+    </span>
   </p>
 
   <mat-form-field appearance="outline" class="key-field">
@@ -20,12 +32,13 @@
       autocomplete="off"
       spellcheck="false"
       [disabled]="busy()"
-      placeholder="AIza..."
+      placeholder="AIza…"
     />
     <button
       mat-icon-button
       matSuffix
       type="button"
+      class="visibility-toggle"
       (click)="toggleVisibility()"
       [attr.aria-label]="showKey() ? 'Hide key' : 'Show key'"
       tabindex="-1"
@@ -36,13 +49,22 @@
       Don't have one?
       <a [href]="studioUrl" target="_blank" rel="noopener noreferrer">
         Get a free key at Google AI Studio
+        <mat-icon aria-hidden="true">open_in_new</mat-icon>
       </a>
     </mat-hint>
   </mat-form-field>
 
-  <div class="quality-row">
-    <span class="quality-label">Quality mode</span>
+  <section class="quality" aria-labelledby="quality-label">
+    <div class="quality-head">
+      <span id="quality-label" class="quality-eyebrow">Quality mode</span>
+      <span class="quality-hint">
+        {{ mode() === 'fast'
+          ? 'gemini-3-flash-preview · snappy parallel streaming'
+          : 'gemini-3-pro-preview · higher quality, needs Pro access' }}
+      </span>
+    </div>
     <mat-button-toggle-group
+      class="quality-toggle"
       [value]="mode()"
       (change)="onModeChange($event.value)"
       [disabled]="busy()"
@@ -57,16 +79,11 @@
         Quality
       </mat-button-toggle>
     </mat-button-toggle-group>
-  </div>
-  <p class="quality-hint">
-    {{ mode() === 'fast'
-      ? 'gemini-3-flash-preview — best for the parallel-streaming demo feel.'
-      : 'gemini-3-pro-preview — higher-quality output, requires Pro access on your key.' }}
-  </p>
+  </section>
 
   @if (errorMsg()) {
     <div class="error" role="alert">
-      <mat-icon>error</mat-icon>
+      <mat-icon aria-hidden="true">error</mat-icon>
       <span>{{ errorMsg() }}</span>
     </div>
   }
@@ -74,21 +91,38 @@
 
 <mat-dialog-actions class="dialog-actions" align="end">
   @if (hasExistingKey()) {
-    <button mat-button color="warn" (click)="onClear()" [disabled]="busy()">
+    <button
+      mat-button
+      type="button"
+      class="clear-btn"
+      (click)="onClear()"
+      [disabled]="busy()"
+    >
       Clear saved key
     </button>
   }
   <span class="spacer"></span>
-  <button mat-button mat-dialog-close [disabled]="busy()">Cancel</button>
+  <button
+    mat-button
+    type="button"
+    class="cancel-btn"
+    mat-dialog-close
+    [disabled]="busy()"
+  >
+    Cancel
+  </button>
   <button
     mat-flat-button
-    color="primary"
+    type="button"
+    class="save-btn"
     (click)="onSave()"
     [disabled]="busy() || !draftKey().trim()"
   >
     @if (busy()) {
-      <mat-spinner diameter="18" />
+      <mat-spinner diameter="16" />
+    } @else {
+      <mat-icon>check_circle</mat-icon>
     }
-    <span>{{ busy() ? 'Validating…' : 'Save & Validate' }}</span>
+    <span>{{ busy() ? 'Validating…' : 'Save & validate' }}</span>
   </button>
 </mat-dialog-actions>

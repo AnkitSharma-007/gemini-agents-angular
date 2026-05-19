@@ -1,6 +1,6 @@
 <header class="topbar">
   <div class="topbar-inner">
-    <div class="brand">
+    <a class="brand" [routerLink]="['/']" aria-label="Maestro home">
       <div class="logo" aria-hidden="true">
         <mat-icon>graphic_eq</mat-icon>
       </div>
@@ -10,9 +10,23 @@
         </h1>
         <p>Multi-agent event orchestration · Gemini</p>
       </div>
-    </div>
+    </a>
 
     <div class="topbar-right">
+      <a
+        mat-stroked-button
+        type="button"
+        class="tour-link"
+        [routerLink]="['/guide']"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        matTooltip="Walk through every feature"
+        matTooltipPosition="below"
+      >
+        <mat-icon>auto_awesome</mat-icon>
+        <span class="tour-label">Tour</span>
+      </a>
+
       <button
         mat-icon-button
         type="button"
@@ -54,40 +68,7 @@
   </div>
 </header>
 
-<main class="layout">
-  @if (!hasKey()) {
-    <dea-no-key-empty-state />
-  } @else {
-    <div class="layout-grid" [class.is-active]="hasContent() || isBusy()">
-      <div class="cc-col">
-        <dea-command-center />
-      </div>
-      <aside class="ct-col">
-        <dea-control-tower />
-      </aside>
-    </div>
-
-    @if (hasContent() || isBusy()) {
-      <section class="dashboard-row">
-        <dea-audit-ribbon />
-        <dea-generative-renderer />
-      </section>
-    } @else {
-      <section class="dashboard-row dashboard-row-empty">
-        <div class="dashboard-empty">
-          <div class="empty-illu" aria-hidden="true">
-            <mat-icon>dashboard_customize</mat-icon>
-          </div>
-          <h3>Your dashboard appears here</h3>
-          <p>
-            Submit a brief above and watch five Gemini agents — Planner, Auditor, and three
-            specialists — compose a live, citation-grounded event dashboard in real time.
-          </p>
-        </div>
-      </section>
-    }
-  }
-</main>
+<router-outlet />
 
 <footer class="footer">
   <span class="footer-brand">

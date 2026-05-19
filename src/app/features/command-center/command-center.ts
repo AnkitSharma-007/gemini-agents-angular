@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   inject,
   signal,
 } from '@angular/core';
@@ -16,6 +17,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { AgentOrchestrator } from '../../core/ai/agent-orchestrator.service';
 import { ApiKeyService } from '../../core/auth/api-key.service';
 import { AgentStore } from '../../core/state/agent.store';
+import { PromptDraftService } from '../../core/state/prompt-draft.service';
 import { classifyApiError, MissingApiKeyError } from '../../core/types/agent.types';
 
 const HERO_PROMPT = `Plan a 3-day, 1,200-attendee Agentic AI conference in Bengaluru in March 2026, INR ₹2.5 crore budget, with hands-on workshops on multi-agent orchestration and a closing fireside.`;
@@ -67,6 +69,7 @@ export class CommandCenter {
   private readonly apiKeys = inject(ApiKeyService);
   private readonly store = inject(AgentStore);
   private readonly snack = inject(MatSnackBar);
+  private readonly drafts = inject(PromptDraftService);
 
   protected readonly prompt = signal<string>('');
   protected readonly heroPrompt = HERO_PROMPT;
@@ -79,6 +82,15 @@ export class CommandCenter {
   protected readonly canSubmit = computed(
     () => this.hasKey() && !this.isBusy() && this.prompt().trim().length > 0,
   );
+
+  constructor() {
+    effect(() => {
+      const draft = this.drafts.draft();
+      if (!draft || this.isBusy()) return;
+      this.prompt.set(draft);
+      this.drafts.consume();
+    });
+  }
 
   protected applyHero(): void {
     if (this.isBusy()) return;
