@@ -74,16 +74,16 @@
   }
 
   .title-eyebrow {
-    font-weight: 700;
-    font-size: 15px;
+    font-weight: var(--weight-bold);
+    font-size: var(--text-lg);
     letter-spacing: -0.005em;
     color: var(--dea-fg);
   }
 
   .title-sub {
-    font-size: 12.5px;
+    font-size: var(--text-sm);
     color: var(--dea-fg-muted);
-    line-height: 1.4;
+    line-height: var(--leading-snug);
   }
 }
 
@@ -93,7 +93,7 @@
   align-items: center;
   gap: 4px;
   font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: 10.5px;
+  font-size: var(--text-2xs);
   color: var(--dea-fg-muted);
   padding: 4px 8px;
   border-radius: 8px;
@@ -120,8 +120,8 @@
   textarea {
     resize: vertical;
     min-height: 96px;
-    line-height: 1.6;
-    font-size: 14px;
+    line-height: var(--leading-relaxed);
+    font-size: var(--text-md);
   }
 }
 
@@ -171,7 +171,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: var(--text-xs);
   color: var(--dea-fg-muted);
 
   .banner-spinner {
@@ -273,12 +273,12 @@
 
   &.over {
     color: var(--dea-error);
-    font-weight: 600;
+    font-weight: var(--weight-semibold);
   }
 
   .char-hint {
     margin-left: 4px;
-    font-weight: 500;
+    font-weight: var(--weight-medium);
   }
 }
 
@@ -290,7 +290,7 @@
 
 .clear-btn {
   height: 36px;
-  font-size: 12px;
+  font-size: var(--text-xs);
   color: var(--dea-fg-muted);
 }
 
@@ -344,9 +344,9 @@
   }
 
   .banner-text {
-    font-size: 13px;
+    font-size: var(--text-sm);
     color: var(--dea-fg);
-    font-weight: 500;
+    font-weight: var(--weight-medium);
   }
 
   mat-progress-bar {
@@ -386,11 +386,11 @@
     }
 
     .title-eyebrow {
-      font-size: 14px;
+      font-size: var(--text-md);
     }
 
     .title-sub {
-      font-size: 11.5px;
+      font-size: var(--text-xs);
     }
   }
 
@@ -399,7 +399,7 @@
   }
 
   .prompt-field textarea {
-    font-size: 13.5px;
+    font-size: var(--text-md);
     min-height: 84px;
   }
 

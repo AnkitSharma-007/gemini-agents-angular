@@ -37,7 +37,7 @@
   align-items: center;
   gap: 6px;
   @include m.eyebrow($size: 12px);
-  letter-spacing: 0.06em;
+  letter-spacing: var(--tracking-wide);
 
   mat-icon {
     @include m.sized-icon(14);
@@ -47,10 +47,10 @@
 
 .venue-name {
   margin: 0;
-  font-size: 22px;
-  font-weight: 700;
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
   letter-spacing: -0.01em;
-  line-height: 1.2;
+  line-height: var(--leading-tight);
 }
 
 .stats {
@@ -77,8 +77,8 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
   font-variant-numeric: tabular-nums;
 
   mat-icon {
@@ -93,14 +93,14 @@
   }
 
   mat-chip {
-    font-size: 12px;
+    font-size: var(--text-xs);
     background: var(--dea-bg-elev-2);
     border: 1px solid var(--dea-border);
 
     mat-icon[matChipAvatar] {
       background: m.tint(var(--dea-success), 22%);
       color: var(--dea-success);
-      font-size: 14px;
+      font-size: var(--text-md);
     }
   }
 }
@@ -108,8 +108,8 @@
 .rationale {
   margin: 0;
   color: var(--dea-fg);
-  font-size: 13.5px;
-  line-height: 1.6;
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
   padding: 12px 14px;
   background: m.blend(var(--dea-bg-elev-2), 60%, transparent);
   border-left: 3px solid var(--dea-accent);
@@ -122,7 +122,7 @@
   }
 
   .venue-name {
-    font-size: 18px;
+    font-size: var(--text-xl);
   }
 
   .stats {
@@ -130,6 +130,6 @@
   }
 
   .stat-value {
-    font-size: 16px;
+    font-size: var(--text-lg);
   }
 }

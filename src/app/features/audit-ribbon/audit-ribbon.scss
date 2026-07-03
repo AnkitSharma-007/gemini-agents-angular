@@ -56,7 +56,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 10px 12px;
-  font-size: 13.5px;
+  font-size: var(--text-md);
   color: var(--dea-fg);
 
   mat-icon {
@@ -68,7 +68,7 @@
   span {
     flex: 1;
     min-width: 12rem;
-    line-height: 1.45;
+    line-height: var(--leading-normal);
   }
 }
 
@@ -80,7 +80,7 @@
 
 .state-unavailable {
   color: var(--dea-fg-muted);
-  font-size: 13px;
+  font-size: var(--text-sm);
 
   mat-icon {
     color: var(--dea-fg-muted);
@@ -117,23 +117,23 @@
 }
 
 .headline {
-  font-weight: 700;
-  font-size: 14px;
+  font-weight: var(--weight-bold);
+  font-size: var(--text-md);
   color: var(--dea-fg);
   letter-spacing: -0.005em;
 }
 
 .sub {
   flex: 1 1 100%;
-  font-size: 12.5px;
+  font-size: var(--text-sm);
   color: var(--dea-fg-muted);
-  line-height: 1.45;
+  line-height: var(--leading-normal);
 }
 
 .reaudit-btn {
   border-radius: 999px;
   height: 32px;
-  font-size: 12px;
+  font-size: var(--text-xs);
 
   mat-icon {
     margin-right: 4px;
@@ -190,8 +190,8 @@
 .message {
   flex: 1;
   min-width: 0;
-  font-size: 13px;
-  line-height: 1.4;
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
   color: var(--dea-fg);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -206,13 +206,13 @@
 }
 
 .apply-btn {
-  font-size: 12px;
+  font-size: var(--text-xs);
   line-height: 32px;
   min-height: 32px;
   padding: 0 14px;
   border-radius: 999px;
   @include m.brand-solid;
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
 
   &:disabled {
     opacity: 0.55;

@@ -74,13 +74,13 @@
 
 .title-eyebrow {
   @include m.eyebrow($size: 10.5px, $color: var(--dea-accent));
-  letter-spacing: 0.14em;
+  letter-spacing: var(--tracking-widest);
 }
 
 .title-heading {
-  font-size: 19px;
-  font-weight: 700;
-  line-height: 1.2;
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
   letter-spacing: -0.01em;
   color: var(--dea-fg);
 }
@@ -104,8 +104,8 @@
   border-radius: var(--dea-radius-md);
   border: 1px dashed m.blend(var(--dea-accent), 35%, var(--dea-border));
   background: m.tint(var(--dea-accent), 6%);
-  font-size: 12.5px;
-  line-height: 1.55;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
   color: var(--dea-fg);
 
   mat-icon {
@@ -120,7 +120,7 @@
   width: 100%;
 
   ::ng-deep .mat-mdc-form-field-hint-wrapper {
-    font-size: 12px;
+    font-size: var(--text-xs);
   }
 
   ::ng-deep .mat-mdc-form-field-flex {
@@ -184,8 +184,8 @@
 }
 
 .quality-hint {
-  font-size: 11.5px;
-  line-height: 1.45;
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
   color: var(--dea-fg-muted);
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   letter-spacing: 0.02em;
@@ -221,8 +221,8 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 12.5px;
-    font-weight: 600;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
     letter-spacing: 0.02em;
     padding: 0 16px;
     line-height: 1;
@@ -257,8 +257,8 @@
   border: 1px solid m.tint(var(--dea-error), 35%);
   border-radius: var(--dea-radius-md);
   color: var(--dea-error);
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
   min-width: 0;
 
   span {
@@ -291,7 +291,7 @@
 }
 
 .clear-btn {
-  font-size: 12px;
+  font-size: var(--text-xs);
   color: var(--dea-error);
 
   &:hover {
@@ -300,7 +300,7 @@
 }
 
 .cancel-btn {
-  font-size: 12.5px;
+  font-size: var(--text-sm);
   color: var(--dea-fg-muted);
   border-radius: 999px;
   padding: 0 14px;
@@ -362,7 +362,7 @@
   }
 
   .title-heading {
-    font-size: 17px;
+    font-size: var(--text-xl);
   }
 
   .dialog-body {

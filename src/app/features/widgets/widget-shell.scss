@@ -3,7 +3,7 @@
 dea-widget-shell {
   display: block;
   height: 100%;
-  animation: shellEnter 360ms cubic-bezier(0.2, 0.7, 0.3, 1.05);
+  animation: shellEnter var(--duration-slow) var(--ease-emphasized);
 
   &.shell-pulse .card {
     box-shadow:
@@ -60,32 +60,32 @@ dea-widget-shell {
 .head {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px 18px 14px;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5) var(--space-4);
   border-bottom: 1px solid var(--dea-border);
 }
 
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 4px 12px 4px 4px;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1);
   background: var(--dea-bg-elev-2);
   border: 1px solid var(--dea-border);
-  border-radius: 999px;
+  border-radius: var(--dea-radius-pill);
 
   mat-icon {
     color: #fff;
     background: var(--dea-gradient-brand-soft);
-    border-radius: 50%;
-    padding: 5px;
+    border-radius: var(--dea-radius-round);
+    padding: var(--space-1);
     @include m.sized-icon(16);
     box-shadow: 0 2px 6px -2px var(--dea-accent-glow);
   }
 
   .agent-label {
-    font-size: 10.5px;
-    font-weight: 700;
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-bold);
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--dea-fg-muted);
@@ -95,23 +95,23 @@ dea-widget-shell {
 .title {
   flex: 1;
   margin: 0;
-  font-size: 15.5px;
-  font-weight: 600;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
   letter-spacing: -0.005em;
-  line-height: 1.25;
+  line-height: var(--leading-tight);
 }
 
 .status-pill {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
   margin-left: auto;
-  padding: 3px 10px;
-  font-size: 10.5px;
-  font-weight: 700;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  border-radius: 999px;
+  border-radius: var(--dea-radius-pill);
   border: 1px solid var(--dea-border);
   background: var(--dea-bg-elev-2);
   color: var(--dea-fg-muted);
@@ -135,7 +135,7 @@ dea-widget-shell {
 }
 
 .confidence-pill {
-  margin-left: 6px;
+  margin-left: var(--space-2);
   cursor: help;
 
   &.conf-high {
@@ -172,8 +172,8 @@ dea-widget-shell {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px 12px;
-  padding: 12px 16px;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
   border-bottom: 1px solid m.blend(var(--dea-warn), 35%, var(--dea-border));
   background: m.blend(var(--dea-warn), 14%, var(--dea-bg-elev-1));
 
@@ -186,22 +186,22 @@ dea-widget-shell {
   .stale-msg {
     flex: 1;
     min-width: 10rem;
-    font-size: 12.5px;
-    line-height: 1.4;
+    font-size: var(--text-sm);
+    line-height: var(--leading-snug);
     color: var(--dea-fg);
-    font-weight: 500;
+    font-weight: var(--weight-medium);
   }
 
   .stale-update-btn {
     margin-left: auto;
     flex-shrink: 0;
-    border-radius: 999px;
+    border-radius: var(--dea-radius-pill);
     height: 32px;
 
     mat-icon {
       color: inherit;
       @include m.sized-icon(15);
-      margin-right: 4px;
+      margin-right: var(--space-1);
     }
   }
 }
@@ -210,8 +210,8 @@ dea-widget-shell {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px 12px;
-  padding: 12px 16px;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
   border-bottom: 1px solid m.blend(var(--dea-error), 35%, var(--dea-border));
   background: m.blend(var(--dea-error), 14%, var(--dea-bg-elev-1));
 
@@ -226,19 +226,19 @@ dea-widget-shell {
     min-width: 10rem;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: var(--space-1);
   }
 
   .ue-title {
-    font-size: 12.5px;
-    line-height: 1.4;
+    font-size: var(--text-sm);
+    line-height: var(--leading-snug);
     color: var(--dea-fg);
-    font-weight: 600;
+    font-weight: var(--weight-semibold);
   }
 
   .ue-msg {
-    font-size: 12px;
-    line-height: 1.4;
+    font-size: var(--text-xs);
+    line-height: var(--leading-snug);
     color: var(--dea-fg-muted);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -249,31 +249,31 @@ dea-widget-shell {
   .ue-retry-btn {
     margin-left: auto;
     flex-shrink: 0;
-    border-radius: 999px;
+    border-radius: var(--dea-radius-pill);
     height: 32px;
 
     mat-icon {
       color: inherit;
       @include m.sized-icon(15);
-      margin-right: 4px;
+      margin-right: var(--space-1);
     }
   }
 }
 
 .body {
-  padding: 18px;
+  padding: var(--space-5);
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
   min-height: 0;
 }
 
 .foot {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 12px 18px 14px;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5) var(--space-4);
   border-top: 1px solid var(--dea-border);
   background: linear-gradient(
     180deg,
@@ -290,12 +290,12 @@ dea-widget-shell {
 .ghost-content {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-3);
 }
 
 .shimmer {
   height: 14px;
-  border-radius: 6px;
+  border-radius: var(--dea-radius-xs);
   background: linear-gradient(
     90deg,
     m.blend(var(--dea-bg-elev-2), 80%, transparent) 0%,
@@ -314,8 +314,8 @@ dea-widget-shell {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10px;
-  padding: 14px;
+  gap: var(--space-3);
+  padding: var(--space-4);
   border: 1px dashed m.blend(var(--dea-error), 35%, var(--dea-border));
   border-radius: var(--dea-radius-md);
   background: m.tint(var(--dea-error), 8%);
@@ -328,12 +328,12 @@ dea-widget-shell {
   p {
     margin: 0;
     color: var(--dea-fg);
-    font-size: 13px;
-    line-height: 1.55;
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
   }
 
   .error-title {
-    font-weight: 600;
+    font-weight: var(--weight-semibold);
     color: var(--dea-error);
   }
 
@@ -342,7 +342,7 @@ dea-widget-shell {
   }
 
   .retry-btn {
-    margin-top: 2px;
+    margin-top: var(--space-1);
   }
 }
 
@@ -374,13 +374,13 @@ dea-widget-shell {
   }
 
   .head {
-    padding: 13px 14px 12px;
-    gap: 8px;
+    padding: var(--space-3) var(--space-4) var(--space-3);
+    gap: var(--space-2);
     flex-wrap: wrap;
   }
 
   .title {
-    font-size: 14px;
+    font-size: var(--text-md);
     flex: 1 1 100%;
     order: 3;
   }
@@ -390,10 +390,10 @@ dea-widget-shell {
   }
 
   .body {
-    padding: 14px;
+    padding: var(--space-4);
   }
 
   .foot {
-    padding: 10px 14px 12px;
+    padding: var(--space-3) var(--space-4) var(--space-3);
   }
 }

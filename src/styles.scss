@@ -16,30 +16,119 @@ html {
     )
   );
 
+  // =========================================================================
+  // DESIGN TOKENS (dark / default) — single source of truth.
+  // See DESIGN_SYSTEM_MIGRATION_PLAN.md for the token conventions ("use tokens,
+  // not magic numbers"), the full target architecture, and the phase that
+  // introduces each group.
+  //
+  // Groups present today: Surfaces · Borders · Text · Accent · Status · Radius ·
+  //   Elevation · Motion · Gradients · Background layers.
+  // Groups arriving next (see plan §3): Spacing (Phase 1), Typography (Phase 2),
+  //   Radius steps (Phase 1/3), Motion scale/Z-index (Phase 1), A11y (Phase 5).
+  // =========================================================================
+
+  // --- Surfaces ---
   --dea-bg: #0a0a14;
   --dea-bg-elev-1: rgba(22, 24, 36, 0.72);
   --dea-bg-elev-2: rgba(32, 34, 50, 0.55);
   --dea-bg-solid-1: #14162a;
   --dea-bg-solid-2: #1c1e36;
+
+  // --- Borders ---
   --dea-border: rgba(255, 255, 255, 0.07);
   --dea-border-strong: rgba(255, 255, 255, 0.14);
+
+  // --- Text ---
   --dea-fg: #ecedf3;
   --dea-fg-muted: #9097ad;
   --dea-fg-subtle: #6a7088;
+
+  // --- Accent ---
   --dea-accent: #b69aff;
   --dea-accent-2: #6ee7f2;
   --dea-accent-glow: rgba(182, 154, 255, 0.42);
   --dea-accent-solid: #6d4aff;
+
+  // --- Status ---
   --dea-success: #5dd6a4;
   --dea-warn: #ffb86b;
   --dea-error: #ff6b8a;
+
+  // --- Radius --- (theme-agnostic)
+  --dea-radius-2xs: 4px;
+  --dea-radius-xs: 8px;
+  --dea-radius-sm: 12px;
   --dea-radius-md: 14px;
   --dea-radius-lg: 20px;
   --dea-radius-xl: 28px;
+  --dea-radius-pill: 999px;
+  --dea-radius-round: 50%;
+
+  // --- Elevation ---
   --dea-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
   --dea-shadow-2: 0 1px 2px rgba(0, 0, 0, 0.4), 0 20px 50px rgba(0, 0, 0, 0.45);
-  --dea-transition: 220ms cubic-bezier(0.2, 0, 0, 1);
 
+  // --- Motion --- (theme-agnostic)
+  --duration-fast: 120ms;
+  --duration-base: 220ms;
+  --duration-slow: 360ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0.7, 0.3, 1.05);
+  --dea-transition: var(--duration-base) var(--ease-standard); // back-compat alias (unchanged value)
+
+  // --- Spacing --- (pure 4px scale, §10.1; theme-agnostic; consumers migrate in Phase 3)
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-9: 36px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-14: 56px;
+  --space-20: 80px;
+
+  // --- Z-index --- (theme-agnostic)
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 30;
+  --z-overlay: 1000;
+  --z-toast: 1100;
+
+  // --- Typography --- (theme-agnostic; consumers migrate in Phase 2)
+  --text-2xs: 11px;
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-md: 14px;
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-2xl: 20px;
+  --text-3xl: 24px;
+  --text-4xl: 32px;
+  --text-display-sm: clamp(1.5rem, 2.6vw, 2rem);
+  --text-display-md: clamp(1.5rem, 3vw, 2.2rem);
+  --text-display-lg: clamp(2rem, 4.4vw, 3.2rem);
+  --leading-none: 1.1;
+  --leading-tight: 1.2;
+  --leading-snug: 1.35;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.6;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.06em;
+  --tracking-wider: 0.1em;
+  --tracking-widest: 0.14em;
+
+  // --- Gradients ---
   --dea-gradient-brand: linear-gradient(135deg, #b69aff 0%, #6ee7f2 55%, #ff9ad9 100%);
   --dea-gradient-brand-soft: linear-gradient(
     135deg,
@@ -47,6 +136,7 @@ html {
     rgba(110, 231, 242, 0.7) 100%
   );
 
+  // --- Background layers ---
   --dea-bg-image:
     radial-gradient(circle at 12% 8%, rgba(182, 154, 255, 0.22), transparent 38%),
     radial-gradient(circle at 92% 18%, rgba(110, 231, 242, 0.16), transparent 42%),
@@ -72,6 +162,7 @@ html.theme-light {
     )
   );
 
+  // === DESIGN TOKENS (light theme overrides) — mirror of the default groups above. ===
   --dea-bg: #f4f5fb;
   --dea-bg-elev-1: rgba(255, 255, 255, 0.82);
   --dea-bg-elev-2: rgba(240, 242, 250, 0.7);
@@ -175,7 +266,7 @@ code {
   padding: 1px 6px;
   border-radius: 4px;
   font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: 12px;
+  font-size: var(--text-xs);
 }
 
 .dea-dialog-panel {

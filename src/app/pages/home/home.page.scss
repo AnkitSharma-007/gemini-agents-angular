@@ -53,7 +53,7 @@
   align-items: center;
   gap: 8px;
   @include m.eyebrow($size: 11.5px);
-  letter-spacing: 0.14em;
+  letter-spacing: var(--tracking-widest);
 
   mat-icon {
     @include m.sized-icon(16);
@@ -63,17 +63,17 @@
 
 .hero-title {
   margin: 0;
-  font-size: clamp(2rem, 4.4vw, 3.2rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.08;
+  font-size: var(--text-display-lg);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-none);
   color: var(--dea-fg);
 }
 
 .hero-lede {
   margin: 0;
   font-size: clamp(0.98rem, 1.4vw, 1.12rem);
-  line-height: 1.6;
+  line-height: var(--leading-relaxed);
   color: var(--dea-fg-muted);
   max-width: 60ch;
 }
@@ -89,8 +89,8 @@
   height: 48px;
   padding-inline: 22px;
   border-radius: 999px;
-  font-weight: 600;
-  font-size: 14px;
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-md);
   @include m.brand-pill;
   box-shadow:
     0 8px 22px -6px var(--dea-accent-glow),
@@ -115,8 +115,8 @@
   height: 48px;
   padding-inline: 20px;
   border-radius: 999px;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: var(--text-md);
+  font-weight: var(--weight-medium);
   border-color: var(--dea-border-strong);
   color: var(--dea-fg);
 
@@ -136,7 +136,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 12.5px;
+  font-size: var(--text-sm);
   color: var(--dea-fg-muted);
 
   mat-icon {
@@ -164,8 +164,8 @@
   border-radius: 14px;
   background: m.blend(var(--dea-bg-elev-2), 75%, transparent);
   border: 1px solid var(--dea-border);
-  font-size: 13px;
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
   color: var(--dea-fg);
   min-width: 138px;
   justify-content: center;
@@ -177,13 +177,13 @@
 
   .node-eyebrow {
     @include m.eyebrow($size: 9.5px);
-    letter-spacing: 0.14em;
+    letter-spacing: var(--tracking-widest);
   }
 
   .node-label,
   .node-name {
-    font-size: 13px;
-    font-weight: 600;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
   }
 }
 
@@ -223,14 +223,14 @@
   gap: 2px;
   padding: 12px 6px;
   min-width: 0;
-  font-size: 12px;
+  font-size: var(--text-xs);
 
   mat-icon {
     @include m.sized-icon(18);
   }
 
   .node-name {
-    font-size: 12px;
+    font-size: var(--text-xs);
   }
 }
 
@@ -297,26 +297,26 @@
 
 .section-eyebrow {
   @include m.eyebrow($size: 11px, $color: var(--dea-accent));
-  letter-spacing: 0.14em;
+  letter-spacing: var(--tracking-widest);
 }
 
 .section-title {
   margin: 0;
-  font-size: clamp(1.5rem, 2.6vw, 2rem);
-  font-weight: 700;
+  font-size: var(--text-display-sm);
+  font-weight: var(--weight-bold);
   letter-spacing: -0.015em;
-  line-height: 1.2;
+  line-height: var(--leading-tight);
 }
 
 .section-lede {
   margin: 0;
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
   color: var(--dea-fg-muted);
 
   strong {
     color: var(--dea-fg);
-    font-weight: 600;
+    font-weight: var(--weight-semibold);
   }
 }
 
@@ -359,16 +359,16 @@
 
 .pillar-title {
   margin: 0;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
   letter-spacing: -0.005em;
 }
 
 .pillar-body {
   margin: 0;
-  font-size: 13.5px;
+  font-size: var(--text-md);
   color: var(--dea-fg-muted);
-  line-height: 1.55;
+  line-height: var(--leading-normal);
 }
 
 .feature-grid {
@@ -433,17 +433,17 @@
 
 .feature-title {
   margin: 0;
-  font-size: 17px;
-  font-weight: 600;
-  line-height: 1.3;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
   letter-spacing: -0.01em;
   color: var(--dea-fg);
 }
 
 .feature-desc {
   margin: 0;
-  font-size: 13.5px;
-  line-height: 1.6;
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
   color: var(--dea-fg-muted);
 }
 
@@ -455,8 +455,8 @@
   border-radius: var(--dea-radius-md);
   border: 1px dashed m.blend(var(--dea-accent), 35%, var(--dea-border));
   background: m.tint(var(--dea-accent), 6%);
-  font-size: 12.5px;
-  line-height: 1.5;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
   color: var(--dea-fg);
 
   mat-icon {
@@ -476,8 +476,8 @@
   width: 100%;
   height: 42px;
   border-radius: 999px;
-  font-weight: 600;
-  font-size: 13px;
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
   @include m.brand-pill;
   box-shadow: 0 6px 16px -6px var(--dea-accent-glow);
   transition: transform var(--dea-transition), box-shadow var(--dea-transition);
@@ -519,16 +519,16 @@
 
   strong {
     display: block;
-    font-size: 13.5px;
+    font-size: var(--text-md);
     color: var(--dea-fg);
     margin-bottom: 4px;
   }
 
   p {
     margin: 0;
-    font-size: 12.5px;
+    font-size: var(--text-sm);
     color: var(--dea-fg-muted);
-    line-height: 1.5;
+    line-height: var(--leading-normal);
   }
 }
 
@@ -558,18 +558,18 @@
 
 .cta-title {
   margin: 0;
-  font-size: clamp(1.5rem, 3vw, 2.2rem);
-  font-weight: 700;
+  font-size: var(--text-display-md);
+  font-weight: var(--weight-bold);
   letter-spacing: -0.015em;
-  line-height: 1.15;
+  line-height: var(--leading-tight);
 }
 
 .cta-lede {
   margin: 0;
-  font-size: 15px;
+  font-size: var(--text-lg);
   color: var(--dea-fg-muted);
   max-width: 56ch;
-  line-height: 1.55;
+  line-height: var(--leading-normal);
 }
 
 .cta-actions {

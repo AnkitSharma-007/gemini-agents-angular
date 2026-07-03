@@ -33,13 +33,13 @@
   .amount {
     display: block;
     margin-top: 4px;
-    font-size: 22px;
-    font-weight: 700;
+    font-size: var(--text-3xl);
+    font-weight: var(--weight-bold);
     font-variant-numeric: tabular-nums;
   }
 
   .dim .amount {
-    font-size: 18px;
+    font-size: var(--text-xl);
     color: var(--dea-fg-muted);
   }
 }
@@ -64,8 +64,8 @@
   gap: 12px;
 
   .cat {
-    font-weight: 500;
-    font-size: 14px;
+    font-weight: var(--weight-medium);
+    font-size: var(--text-md);
     color: var(--dea-fg);
     cursor: help;
     border-bottom: 1px dotted transparent;
@@ -78,9 +78,9 @@
 
   .amt {
     font-variant-numeric: tabular-nums;
-    font-weight: 600;
+    font-weight: var(--weight-semibold);
     color: var(--dea-fg);
-    font-size: 13px;
+    font-size: var(--text-sm);
   }
 }
 
@@ -93,8 +93,8 @@ mat-progress-bar {
 .rationale {
   margin: 2px 0 0;
   color: var(--dea-fg-muted);
-  font-size: 12.5px;
-  line-height: 1.5;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
 }
 
 @include m.mobile-xs {
@@ -104,15 +104,15 @@ mat-progress-bar {
     padding: 12px 14px;
 
     .amount {
-      font-size: 18px;
+      font-size: var(--text-xl);
     }
 
     .dim .amount {
-      font-size: 16px;
+      font-size: var(--text-lg);
     }
   }
 
   .line-row .cat {
-    font-size: 13px;
+    font-size: var(--text-sm);
   }
 }

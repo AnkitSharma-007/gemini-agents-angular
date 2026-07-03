@@ -15,7 +15,7 @@
 .empty {
   margin: 0;
   color: var(--dea-fg-muted);
-  font-size: 13px;
+  font-size: var(--text-sm);
 }
 
 .day-tabs {
@@ -35,8 +35,8 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-size: 12.5px;
-    font-weight: 500;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
 
     .num {
       width: 20px;
@@ -46,8 +46,8 @@
       place-items: center;
       background: m.tint(var(--dea-accent), 18%);
       color: var(--dea-accent);
-      font-size: 11px;
-      font-weight: 700;
+      font-size: var(--text-2xs);
+      font-weight: var(--weight-bold);
     }
   }
 }
@@ -87,8 +87,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
   color: var(--dea-fg-muted);
   font-variant-numeric: tabular-nums;
 
@@ -107,9 +107,9 @@
 
 .title {
   margin: 0;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.35;
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
   color: var(--dea-fg);
 }
 
@@ -117,7 +117,7 @@
   display: inline-flex;
   flex-wrap: wrap;
   gap: 10px;
-  font-size: 12px;
+  font-size: var(--text-xs);
   color: var(--dea-fg-muted);
 }
 
@@ -137,8 +137,8 @@
   border-radius: 999px;
   background: m.tint(var(--dea-accent), 12%);
   color: var(--dea-accent);
-  font-size: 11px;
-  font-weight: 500;
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-medium);
 }
 
 @include m.mobile-sm {
@@ -149,6 +149,6 @@
   }
 
   .time {
-    font-size: 11px;
+    font-size: var(--text-2xs);
   }
 }

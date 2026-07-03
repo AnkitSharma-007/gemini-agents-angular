@@ -39,8 +39,8 @@
   h2 {
     margin: 0;
     @include m.eyebrow($size: 13px, $color: var(--dea-fg));
-    font-weight: 700;
-    letter-spacing: 0.1em;
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wider);
   }
 
   .title-line {
@@ -84,11 +84,11 @@
 }
 
 .state-pill {
-  font-size: 10px;
-  font-weight: 700;
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-bold);
   padding: 4px 10px;
   border-radius: 999px;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-wider);
   border: 1px solid var(--dea-border);
   background: var(--dea-bg-elev-2);
   color: var(--dea-fg-muted);
@@ -114,8 +114,8 @@
   border: 1px solid var(--dea-border);
   border-left: 3px solid var(--dea-accent);
   border-radius: var(--dea-radius-md);
-  font-size: 13px;
-  line-height: 1.55;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
   color: var(--dea-fg);
 
   mat-icon {
@@ -128,7 +128,7 @@
   &.placeholder {
     border-left-color: var(--dea-border-strong);
     color: var(--dea-fg-muted);
-    font-size: 12.5px;
+    font-size: var(--text-sm);
   }
 }
 
@@ -220,8 +220,8 @@
 }
 
 .role {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
   color: var(--dea-fg);
 }
 
@@ -250,7 +250,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 4px 8px;
-  font-size: 12px;
+  font-size: var(--text-xs);
   min-width: 0;
 }
 
@@ -268,8 +268,8 @@
 .err-detail {
   flex-basis: 100%;
   min-width: 0;
-  font-size: 11px;
-  line-height: 1.45;
+  font-size: var(--text-2xs);
+  line-height: var(--leading-normal);
   color: var(--dea-error);
   opacity: 0.85;
 }
@@ -277,7 +277,7 @@
 .retry-btn {
   flex-shrink: 0;
   margin-left: auto;
-  font-size: 11px;
+  font-size: var(--text-2xs);
   line-height: 26px;
   min-height: 26px;
   padding: 0 10px;
@@ -315,13 +315,13 @@
   }
 
   .telemetry-copy {
-    font-size: 12.5px;
+    font-size: var(--text-sm);
     color: var(--dea-fg);
     font-variant-numeric: tabular-nums;
 
     strong {
       font-family: 'JetBrains Mono', ui-monospace, monospace;
-      font-weight: 700;
+      font-weight: var(--weight-bold);
       color: var(--dea-fg);
     }
   }
@@ -333,9 +333,9 @@
 
   .telemetry-note {
     grid-column: 2;
-    font-size: 10px;
+    font-size: var(--text-2xs);
     color: var(--dea-fg-subtle);
-    line-height: 1.4;
+    line-height: var(--leading-snug);
     margin: 0;
     max-width: none;
   }
@@ -373,7 +373,7 @@
 
   .rationale {
     padding: 12px 14px;
-    font-size: 12.5px;
+    font-size: var(--text-sm);
   }
 
   .row {
@@ -382,11 +382,11 @@
   }
 
   .role {
-    font-size: 12.5px;
+    font-size: var(--text-sm);
   }
 
   .err-detail {
-    font-size: 10.5px;
+    font-size: var(--text-2xs);
   }
 
   .telemetry-bar .telemetry-note {
