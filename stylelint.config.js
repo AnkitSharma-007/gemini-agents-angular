@@ -1,18 +1,16 @@
 // Stylelint config — Design System guardrail (see DESIGN_SYSTEM_MIGRATION_PLAN.md).
 //
-// Phase 0 (current): everything runs at WARNING severity so nothing blocks the
-// build/commit. The point right now is to surface the baseline of design-token
-// violations (magic numbers) that the migration will burn down phase by phase.
-//
-// Adoption ramp: as each phase completes, its design-token rule is flipped from
-// warning -> error to lock the consistency in (see the migration plan §4/§8).
+// Phase 8 (locked): the migration is complete and enforcement is hardened — the
+// suite now runs at ERROR severity, so any design-token drift (raw color / spacing /
+// radius / type literals) or standard-scss regression fails `npm run lint:styles`.
+// The violation baseline was burned down to zero across Phases 2–7 before the flip.
 module.exports = {
   extends: ['stylelint-config-standard-scss'],
   plugins: ['stylelint-declaration-strict-value'],
   ignoreFiles: ['dist/**', '.angular/**', 'coverage/**', 'node_modules/**'],
 
-  // Non-breaking: keep the whole suite advisory until the migration locks rules per phase.
-  defaultSeverity: 'warning',
+  // Locked (Phase 8): design-token rules + standard-scss hygiene are enforced as errors.
+  defaultSeverity: 'error',
 
   rules: {
     // === Design-token enforcement (the migration worklist) =====================
@@ -47,7 +45,7 @@ module.exports = {
           // that have no 4px-scale equivalent (see §10.1 note).
           '1px',
         ],
-        severity: 'warning',
+        severity: 'error',
       },
     ],
 

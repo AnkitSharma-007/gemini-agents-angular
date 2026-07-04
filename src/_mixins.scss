@@ -24,10 +24,18 @@
   border: 1px solid var(--dea-border);
   border-radius: $radius;
   box-shadow: $shadow;
-  backdrop-filter: blur($blur) saturate($saturate);
-  -webkit-backdrop-filter: blur($blur) saturate($saturate);
+  // Blur is capped on low-power (touch) devices via --glass-blur-max (set in
+  // styles.scss); desktop is unaffected because the var is unset there (Phase 8 perf).
+  backdrop-filter: blur(min(#{$blur}, var(--glass-blur-max, #{$blur}))) saturate($saturate);
+  -webkit-backdrop-filter: blur(min(#{$blur}, var(--glass-blur-max, #{$blur}))) saturate($saturate);
   overflow: hidden;
   isolation: isolate;
+
+  // Opaque fallback where backdrop-filter is unsupported: the translucent glass
+  // would otherwise let the busy page background bleed through and hurt contrast (Phase 8).
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    background: var(--dea-bg-solid-1);
+  }
 }
 
 @mixin pill(

@@ -88,6 +88,7 @@
 }
 
 .amenities {
+  // No Material token controls the chip-set flex gap; documented ::ng-deep fallback (Phase 7).
   ::ng-deep .mdc-evolution-chip-set__chips {
     gap: var(--space-2);
   }

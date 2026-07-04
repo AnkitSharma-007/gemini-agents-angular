@@ -47,7 +47,7 @@
     display: grid;
     place-items: center;
     border-radius: var(--dea-radius-sm);
-    background: var(--dea-gradient-brand);
+    background: var(--dea-accent-solid);
     box-shadow:
       0 0 0 1px m.tint(var(--dea-accent), 30%),
       0 8px 24px -6px var(--dea-accent-glow);
@@ -189,11 +189,10 @@
       font-weight: var(--weight-bold);
       padding: var(--space-1) var(--space-2);
       border-radius: var(--dea-radius-pill);
-      background: var(--dea-gradient-brand-strong);
-      color: var(--color-on-accent);
+      background: m.tint(var(--dea-accent), 16%);
+      color: var(--dea-accent);
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      box-shadow: 0 2px 8px -2px var(--dea-accent-glow);
     }
   }
 

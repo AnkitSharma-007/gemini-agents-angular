@@ -22,7 +22,7 @@
     inset: 0;
     width: 4px;
     border-radius: var(--dea-radius-lg) 0 0 var(--dea-radius-lg);
-    background: var(--dea-gradient-brand);
+    background: var(--dea-accent);
     opacity: 0.55;
     z-index: -1;
   }
@@ -212,7 +212,6 @@
 .dismiss-btn {
   width: 32px;
   height: 32px;
-  line-height: 32px;
 
   mat-icon {
     @include m.sized-icon(16);

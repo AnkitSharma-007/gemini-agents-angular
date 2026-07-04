@@ -10,8 +10,8 @@
 
 .dialog-aurora {
   position: absolute;
-  inset: -30% -10% 50% -10%;
-  background: var(--dea-gradient-brand);
+  inset: -30% -10% 50%;
+  background: var(--dea-accent);
   opacity: 0.18;
   filter: blur(60px);
   z-index: 0;
@@ -39,7 +39,7 @@
   display: grid;
   place-items: center;
   border-radius: var(--dea-radius-sm);
-  background: var(--dea-gradient-brand);
+  background: var(--dea-accent-solid);
   box-shadow:
     0 0 0 1px m.tint(var(--dea-accent), 30%),
     0 8px 22px -8px var(--dea-accent-glow);
@@ -118,14 +118,9 @@
 
 .key-field {
   width: 100%;
-
-  ::ng-deep .mat-mdc-form-field-hint-wrapper {
-    font-size: var(--text-xs);
-  }
-
-  ::ng-deep .mat-mdc-form-field-flex {
-    border-radius: var(--dea-radius-md);
-  }
+  // Material outlined form-field tokens (v22) instead of ::ng-deep on internals.
+  --mat-form-field-outlined-container-shape: var(--dea-radius-md);
+  --mat-form-field-subscript-text-size: var(--text-xs);
 
   a {
     color: var(--dea-accent);
@@ -199,52 +194,40 @@
   background: var(--dea-bg-elev-2);
   border: 1px solid var(--dea-border-strong);
 
+  // Material button-toggle tokens (v22): colors, typography, height, and the
+  // hover/selected states are driven by tokens instead of ::ng-deep on internals.
+  --mat-button-toggle-background-color: transparent;
+  --mat-button-toggle-text-color: var(--dea-fg-muted);
+  --mat-button-toggle-divider-color: transparent;
+  --mat-button-toggle-height: 38px;
+  --mat-button-toggle-label-text-size: var(--text-sm);
+  --mat-button-toggle-label-text-weight: var(--weight-semibold);
+  --mat-button-toggle-label-text-tracking: 0.02em;
+  --mat-button-toggle-label-text-line-height: 1;
+  --mat-button-toggle-selected-state-background-color: var(--dea-accent-solid);
+  --mat-button-toggle-selected-state-text-color: var(--color-on-accent);
+  --mat-button-toggle-state-layer-color: var(--dea-accent);
+
+  // Layout internals below have no Material token equivalent — documented
+  // ::ng-deep fallbacks (Phase 7): equal-width flex, compact label padding/gap,
+  // icon size, and the selected pill's inset hairline.
   ::ng-deep .mat-button-toggle {
     flex: 1;
-    background: transparent;
-    color: var(--dea-fg-muted);
-    border: 0;
-    transition:
-      background var(--dea-transition),
-      color var(--dea-transition);
-  }
-
-  ::ng-deep .mat-button-toggle-button {
-    padding: 0;
-    height: 38px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
   ::ng-deep .mat-button-toggle-label-content {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    font-size: var(--text-sm);
-    font-weight: var(--weight-semibold);
-    letter-spacing: 0.02em;
     padding: 0 var(--space-4);
-    line-height: 1;
   }
 
   ::ng-deep .mat-button-toggle mat-icon {
     @include m.sized-icon(15);
   }
 
-  ::ng-deep .mat-button-toggle:hover:not(.mat-button-toggle-disabled):not(.mat-button-toggle-checked) {
-    background: m.tint(var(--dea-accent), 8%);
-    color: var(--dea-fg);
-  }
-
   ::ng-deep .mat-button-toggle-checked {
-    background: var(--dea-gradient-brand);
-    color: var(--color-on-accent);
     box-shadow: inset 0 0 0 1px m.tint(var(--dea-accent), 30%);
-
-    mat-icon {
-      color: var(--color-on-accent);
-    }
   }
 }
 
@@ -265,7 +248,6 @@
     flex: 1;
     min-width: 0;
     overflow-wrap: anywhere;
-    word-break: break-word;
     color: var(--dea-fg);
   }
 
@@ -295,7 +277,7 @@
   font-size: var(--text-xs);
   color: var(--dea-error);
 
-  &:hover:not([disabled]):not(:disabled) {
+  &:hover:not([disabled], :disabled) {
     color: var(--dea-error);
     background: m.tint(var(--dea-error), 8%);
   }
@@ -316,10 +298,8 @@
   mat-spinner {
     margin-right: var(--space-2);
     display: inline-block;
-
-    ::ng-deep circle {
-      stroke: var(--color-on-accent);
-    }
+    // Material progress-spinner color token (v22) instead of ::ng-deep on the SVG circle.
+    --mat-progress-spinner-active-indicator-color: var(--color-on-accent);
   }
 }
 

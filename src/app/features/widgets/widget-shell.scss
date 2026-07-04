@@ -43,7 +43,7 @@ dea-widget-shell {
     position: absolute;
     inset: 0;
     height: 80px;
-    background: var(--dea-gradient-brand);
+    background: var(--dea-accent);
     opacity: 0.06;
     z-index: -1;
     pointer-events: none;
@@ -76,7 +76,7 @@ dea-widget-shell {
 
   mat-icon {
     color: var(--color-on-accent);
-    background: var(--dea-gradient-brand-soft);
+    background: var(--dea-accent-solid);
     border-radius: var(--dea-radius-round);
     padding: var(--space-1);
     @include m.sized-icon(16);

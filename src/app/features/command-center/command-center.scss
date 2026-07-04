@@ -21,9 +21,9 @@
 
 .aurora {
   position: absolute;
-  inset: -40% -10% auto -10%;
+  inset: -40% -10% auto;
   height: 240px;
-  background: var(--dea-gradient-brand);
+  background: var(--dea-accent);
   opacity: 0.18;
   filter: blur(60px);
   z-index: -1;
@@ -56,7 +56,7 @@
     display: grid;
     place-items: center;
     border-radius: var(--dea-radius-sm);
-    background: var(--dea-gradient-brand-soft);
+    background: var(--dea-accent-solid);
     box-shadow: 0 8px 22px -8px var(--dea-accent-glow);
     position: relative;
 
@@ -112,10 +112,8 @@
 
 .prompt-field {
   width: 100%;
-
-  ::ng-deep .mat-mdc-text-field-wrapper {
-    border-radius: var(--dea-radius-md);
-  }
+  // Material outlined form-field shape token (v22) instead of ::ng-deep on internals.
+  --mat-form-field-outlined-container-shape: var(--dea-radius-md);
 
   textarea {
     resize: vertical;

@@ -173,7 +173,7 @@ html.theme-light {
   --dea-bg: #f4f5fb;
   --dea-bg-elev-1: rgba(255, 255, 255, 0.82);
   --dea-bg-elev-2: rgba(240, 242, 250, 0.7);
-  --dea-bg-solid-1: #ffffff;
+  --dea-bg-solid-1: #fff;
   --dea-bg-solid-2: #eef0f9;
   --dea-border: rgba(15, 18, 30, 0.08);
   --dea-border-strong: rgba(15, 18, 30, 0.18);
@@ -229,8 +229,22 @@ body {
     system-ui,
     sans-serif;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+  text-rendering: optimizelegibility;
   transition: background-color 220ms ease, color 220ms ease;
+}
+
+// Perf (Phase 8): `background-attachment: fixed` forces a full-viewport repaint on
+// every scroll frame, and stacked backdrop-blur is GPU-heavy — both bite hardest on
+// mobile. On touch / coarse-pointer devices, let the background scroll normally and
+// cap glass blur (consumed by the glass-surface mixin via --glass-blur-max).
+@media (hover: none), (pointer: coarse) {
+  body {
+    background-attachment: scroll;
+  }
+
+  html {
+    --glass-blur-max: 10px;
+  }
 }
 
 * {

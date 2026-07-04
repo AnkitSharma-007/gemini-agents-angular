@@ -68,7 +68,7 @@
     content: '';
     position: absolute;
     inset: -1px;
-    background: var(--dea-gradient-brand);
+    background: var(--dea-accent);
     opacity: 0.15;
     z-index: -1;
     filter: blur(40px);
@@ -80,7 +80,7 @@
     display: grid;
     place-items: center;
     border-radius: var(--dea-radius-lg);
-    background: var(--dea-gradient-brand-soft);
+    background: var(--dea-accent-solid);
     box-shadow: 0 12px 30px -8px var(--dea-accent-glow);
 
     mat-icon {

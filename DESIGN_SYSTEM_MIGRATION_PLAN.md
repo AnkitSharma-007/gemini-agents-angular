@@ -1,7 +1,7 @@
 # Maestro — Design System Migration Plan
 
 **Date:** 2026-07-03
-**Status:** In progress — decisions locked (§10); **Phases 0, 1, 2, 3, 4, 5 complete**; Phase 6 (gradient budget) next.
+**Status:** **Core migration complete** — decisions locked (§10); **Phases 0–8 complete**; ruleset locked at error severity. Only **Phase 9 (optional aesthetic modernization)** remains, plus a documented manual device-perf pass.
 **Owner:** _TBD_
 **Related docs:** `UX_DESIGN_AUDIT.md` (§4.6 gradient overload, §4.8 type/spacing, §4.9 radii, §4.7 performance), `PRODUCTION_READINESS_REVIEW.md`.
 
@@ -258,7 +258,7 @@ Add **stylelint** (separate from the existing eslint) so tokens are mandatory, n
 - **Status:** ✅ Done (2026-07-04). Added the §3.6 a11y token block to `styles.scss`: `--color-on-accent` (#fff, theme-agnostic) and `--focus-ring` (outline shorthand keyed to `--dea-accent`), alongside the `--target-min`/`--target-min-primary` brought forward in Phase 4. Introduced a **global `:focus-visible`** rule (`outline: var(--focus-ring); outline-offset: 2px`) so every interactive element gets one keyboard-focus indicator in both themes — implemented via `outline` rather than the box-shadow two-layer originally sketched, because `outline` never conflicts with a control's own shadow and is never clipped by `overflow: hidden` glass surfaces (the offset gap gives ring separation on busy backgrounds). Tokenized **every** `#fff`/`stroke: #fff` foreground to `var(--color-on-accent)` (both brand mixins + 8 consumer files), clearing all `color`/`fill`/`stroke` strict-value violations. **Subtle-text contrast:** lightened dark `--dea-fg-subtle` `#6a7088 → #7c8498` and darkened light `#7a8198 → #626981` to reach WCAG AA (~4.7–5:1 computed) on surfaces. **Gradient contrast (§10.3, signed off):** added `--dea-gradient-brand-strong` (violet→magenta, no light cyan; both themes) and routed the only two white-on-gradient interactive elements — `button-hero` (hero + section CTA) and the header `.mode-pill` chip — onto it so white passes AA (~4.7–5.5:1); the decorative rainbow `--dea-gradient-brand` is untouched for background washes. Gradient *text* (`.brand-gradient`) is already only on large display headings, satisfying the "large sizes only" item. **Result:** `lint:styles` **35 → 13** warnings, **0** color/fill/stroke violations; the 13 residuals are pre-existing hygiene nits + 3 intentional non-scale `line-height` centering exceptions (deferred to Phase 7). Build clean; bumped the `anyComponentStyle` **warning** budget 14 → 16 kB to absorb token verbosity (20 kB error ceiling unchanged).
 - **Visual-QA note (for the §8 gate):** verify both themes — (1) a visible violet focus ring appears on every button/link/input when tabbing; (2) the hero + bottom section CTA and the header mode chip now read **violet→magenta** (not rainbow) with crisp white text; (3) subtle/meta text (timestamps, hints, char-count) reads slightly stronger. **Known residual (outside the signed-off scope):** the hero *diagram* `.node-planner` node and the feature-card icon still use the decorative rainbow with white foreground — decorative illustration; can be moved to the strong gradient later if desired.
 
-### Phase 6 — Gradient budget
+### Phase 6 — Gradient budget ✅ Done
 - **Objective:** Restore hierarchy with the **strict** rule (§10.2): **max one** full-gradient emphasis element per view (audit §4.6).
 - **Scope (in):** Define the rule here (§10.2); introduce a single `surface-accent` primitive; downgrade **all** secondary gradient washes (feature-card top bar, widget wash, ribbon rail, tower blob, auroras, badges, pills) to flat tinted surfaces or a hairline accent; keep the full gradient on the **hero only** (in-app primary CTAs are now solid per §10.3).
 - **Files:** home/command-center/control-tower/widget-shell/audit/empty-state/dialog `.scss`.
@@ -266,8 +266,16 @@ Add **stylelint** (separate from the existing eslint) so tokens are mandatory, n
 - **Risk/mitigation:** This is a **taste decision** — align on the rule before executing (§10.2). Do it view-by-view; easy to over- or under-correct.
 - **Rollback:** Phase PR revert (self-contained per view).
 - **Effort:** M.
+- **Done (2026-07-04):** Chosen approach **"de-rainbow, keep the glow"** (§10.2 strict). The full brand rainbow now survives in exactly two sanctioned roles — the **hero / bottom-section CTA** (`button-hero` → `--dea-gradient-brand-strong`, the one emphasis element per view) and **large brand gradient _text_** (`brand-text-gradient`; audit §4.2 keeps this to display sizes). Everything else was downgraded:
+  - **Ambient glows/auroras/blobs → flat single-accent (`--dea-accent`)** at unchanged opacity/blur (soft violet glow, no longer rainbow): home hero glow + CTA-card glow, command-center aurora, control-tower blob, widget-card wash, empty-state aurora, dialog aurora, workspace empty-state glow.
+  - **Icon badges / logos → solid accent (`--dea-accent-solid`)** so white glyphs still pass AA: header logo, dialog title-badge, dialog selected toggle, workspace empty-illu, command-center title-glow, home pillar-icon, empty-state badge, widget badge chip, and the hero-diagram **Planner** node (Phase-5 residual folded in per sign-off).
+  - **Crisp repeated bars → flat accent hairline:** home feature-card top bar, audit-ribbon default rail.
+  - **Header mode-pill → tinted pill** (`tint(--dea-accent, 16%)` bg + `--dea-accent` text), dropping the gradient + glow shadow.
+  - **Semantic status rails kept:** audit-ribbon `state-clean` (green) / `state-issues` (amber) are meaning-bearing, not brand overload, so untouched. `--dea-gradient-brand-soft` is now unused by consumers (definition retained).
+- **Verify:** `npm run lint:styles` → 13 warnings / 0 errors (unchanged pre-existing hygiene); `npm run build` clean, no budget warnings.
+- **Visual-QA note (for the §8 gate):** both themes — (1) each screen has **≤1** rainbow-gradient element (the hero/section CTA); (2) glows/auroras now read as a **single soft violet** wash, not a multicolor smear; (3) icon badges/logo are **solid violet** with legible white glyphs; (4) the header mode chip is a subtle violet **tinted** pill; (5) audit-ribbon clean/issues rails remain green/amber.
 
-### Phase 7 — Material token alignment / reduce `::ng-deep`
+### Phase 7 — Material token alignment / reduce `::ng-deep` ✅ Done
 - **Objective:** Replace brittle `::ng-deep` Material overrides with Material's token/theming API where feasible.
 - **Scope (in):** Migrate schedule tabs, quality toggle, form-field overrides to Material system tokens / documented style hooks; keep `::ng-deep` only where unavoidable, documented.
 - **Files:** schedule-widget, api-key.dialog, command-center, refine-bar `.scss`.
@@ -275,8 +283,19 @@ Add **stylelint** (separate from the existing eslint) so tokens are mandatory, n
 - **Risk/mitigation:** Material token coverage varies by component — spike each before committing; leave a documented `::ng-deep` fallback if the API can't reach it.
 - **Rollback:** Per-component revert.
 - **Effort:** M–L.
+- **Done (2026-07-04):** `::ng-deep` selectors reduced **13 → 6** (all remaining are documented, token-less layout fallbacks). Approach: because the repo runs Material 3 (`mat.theme`) and CSS custom properties cascade through emulated encapsulation, component tokens are set on the component wrapper — no `::ng-deep` required. Exact v22 token names were verified against `node_modules/@angular/material` before use.
+  - **Fully migrated to tokens (0 `::ng-deep`):**
+    - **schedule-widget tabs** → `--mat-tab-divider-color/-height`, `--mat-tab-{inactive,active}-{,hover-,focus-}label-text-color`.
+    - **command-center `.prompt-field`** + **dialog `.key-field`** (both `appearance="outline"`) → `--mat-form-field-outlined-container-shape`; hint size → `--mat-form-field-subscript-text-size`.
+    - **dialog save-btn spinner** → `--mat-progress-spinner-active-indicator-color` (replaces `::ng-deep circle { stroke }`).
+  - **Partially migrated (colors/typography/height/state → tokens; documented `::ng-deep` kept for token-less internals):**
+    - **dialog `.quality-toggle`** → `--mat-button-toggle-{background-color,text-color,divider-color,height,label-text-size/-weight/-tracking/-line-height,selected-state-background-color,selected-state-text-color,state-layer-color}`. Remaining `::ng-deep`: equal-width flex, compact label padding/gap, icon size, selected inset hairline. (Also dropped the chained `:not()` hover rule — hover is now the token state layer — which cleared 2 stylelint warnings, 13 → 11.)
+  - **No token exists — documented `::ng-deep` fallback retained:** refine-bar subscript `display:none` (visibility), venue-widget `.mdc-evolution-chip-set__chips { gap }` (chip-set flex gap).
+  - **Note:** the existing **global** `.mat-mdc-dialog-*` overrides in `styles.scss` are unscoped (not `::ng-deep`) and were left as-is.
+- **Verify:** `npm run lint:styles` → 11 warnings / 0 errors; `npm run build` clean, no budget warnings.
+- **Visual-QA note (for the §8 gate):** both themes — (1) schedule day-tabs: inactive labels muted, active label full-strength, 1px bottom divider; (2) API-key + prompt fields keep the rounded outline and small hint text; (3) **quality toggle** (highest-risk item): equal-width segments, compact height, selected segment solid violet with white label+icon and inset hairline, hover shows a subtle accent state layer; (4) save-btn spinner is white on the violet button; (5) venue amenity chips keep their gap; (6) refine-bar field stays single-row (no subscript).
 
-### Phase 8 — Performance pass + enforcement hardening
+### Phase 8 — Performance pass + enforcement hardening ✅ Done (enforcement + structural perf; device-measurement deferred)
 - **Objective:** Mitigate blur/fixed-bg cost; lock the system by flipping stylelint to error.
 - **Scope (in):** Measure scroll/paint on a mid-tier device; drop/limit `background-attachment: fixed` on mobile; cap concurrent `backdrop-filter` layers; add `@supports` fallbacks so glass degrades to solid; flip stylelint rules from warning → **error**.
 - **Files:** `styles.scss`, `_mixins.scss` (glass-surface), page backgrounds; `package.json`/stylelint config.
@@ -284,6 +303,13 @@ Add **stylelint** (separate from the existing eslint) so tokens are mandatory, n
 - **Risk/mitigation:** Reducing blur changes look — keep it subtle and behind measurement; perf work is empirical, timebox it.
 - **Rollback:** Revert mitigations; keep stylelint at warning if needed.
 - **Effort:** M.
+- **Done (2026-07-04):** Enforcement hardened and the structural (look-neutral) perf mitigations landed; empirical on-device blur tuning is deferred to a manual session (see follow-up).
+  - **Enforcement locked:** `stylelint.config.js` flipped `defaultSeverity` **warning → error** and the `scale-unlimited/declaration-strict-value` design-token rule to **error**. Before flipping, the full baseline was burned to **zero** — the last design-token violation (audit-ribbon `.dismiss-btn` `line-height: 32px`, a `mat-icon-button` that Material already centers) was removed, and the 10 remaining standard-scss hygiene warnings were cleared (redundant-value insets, `#ffffff`→`#fff`, `optimizeLegibility` case, redundant `word-break: break-word` dropped where `overflow-wrap: anywhere` already applies, chained `:not()`→list notation, `row/column-gap`→`gap` shorthand). `npm run lint:styles` now passes at **error, 0 problems**.
+  - **Glass robustness (look-neutral):** `glass-surface` gained an `@supports not (backdrop-filter…)` **opaque fallback** (`--dea-bg-solid-1`) so the translucent surfaces don't let the busy page background bleed through where blur is unsupported. Verified present in built CSS.
+  - **Mobile perf (conservative):** on `(hover: none), (pointer: coarse)` the page `background-attachment` drops **fixed → scroll** (fixed forces a full-viewport repaint per scroll frame) and glass blur is **capped to 10px** via an inherited `--glass-blur-max` consumed by `glass-surface` as `blur(min($blur, var(--glass-blur-max, $blur)))`. **Desktop is byte-for-byte unchanged** (the var is unset, so `min($blur,$blur)=$blur`). Verified `blur(min(18px,var(--glass-blur-max, 18px)))` + `background-attachment:scroll` in built CSS.
+  - **Deferred (manual):** actual scroll/paint **measurement on a mid-tier device**, and any further blur-radius / concurrent-layer reduction driven by those numbers. This is empirical and can't be measured in the build environment; the plumbing (`--glass-blur-max`) is in place so tuning is a one-line change.
+- **Verify:** `npm run lint:styles` → **0 problems at error severity**; `npm run build` clean, no budget warnings; min()-blur, `@supports` fallback, and mobile `background-attachment:scroll` all confirmed in `dist`.
+- **Visual-QA note (for the §8 gate):** desktop look unchanged (regression check across both themes); on a touch device the page background scrolls with content (no parallax) and glass panels are slightly less blurred — verify text-on-glass contrast still holds.
 
 ### Phase 9 — Aesthetic modernization (optional, post-migration)
 - **Objective:** Act on the audit's aesthetic recommendation (§4.6, §7.4): move away from full glassmorphism/aurora toward flatter, higher-contrast, "quiet luxury" surfaces with accent used surgically — *without* re-touching every file.

@@ -19,17 +19,16 @@
 }
 
 .day-tabs {
-  ::ng-deep .mat-mdc-tab-header {
-    border-bottom: 1px solid var(--dea-border);
-  }
-
-  ::ng-deep .mat-mdc-tab .mdc-tab__text-label {
-    color: var(--dea-fg-muted);
-  }
-
-  ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
-    color: var(--dea-fg);
-  }
+  // Angular Material tab tokens (v22): CSS custom properties cascade through
+  // emulated encapsulation, so the tab internals are reachable without ::ng-deep.
+  --mat-tab-divider-color: var(--dea-border);
+  --mat-tab-divider-height: 1px;
+  --mat-tab-inactive-label-text-color: var(--dea-fg-muted);
+  --mat-tab-inactive-hover-label-text-color: var(--dea-fg-muted);
+  --mat-tab-inactive-focus-label-text-color: var(--dea-fg-muted);
+  --mat-tab-active-label-text-color: var(--dea-fg);
+  --mat-tab-active-hover-label-text-color: var(--dea-fg);
+  --mat-tab-active-focus-label-text-color: var(--dea-fg);
 
   .tab-label {
     display: inline-flex;

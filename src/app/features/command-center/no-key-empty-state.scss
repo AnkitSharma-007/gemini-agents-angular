@@ -23,8 +23,8 @@
 
 .aurora {
   position: absolute;
-  inset: -50% -10% 50% -10%;
-  background: var(--dea-gradient-brand);
+  inset: -50% -10% 50%;
+  background: var(--dea-accent);
   opacity: 0.18;
   filter: blur(60px);
   z-index: -1;
@@ -37,11 +37,11 @@
   margin: 0 auto var(--space-6);
   border-radius: var(--dea-radius-xl);
   display: grid;
-  place-items: center;
-  background: var(--dea-gradient-brand);
-  box-shadow:
-    0 0 0 1px m.tint(var(--dea-accent), 30%),
-    0 16px 36px -10px var(--dea-accent-glow);
+    place-items: center;
+    background: var(--dea-accent-solid);
+    box-shadow:
+      0 0 0 1px m.tint(var(--dea-accent), 30%),
+      0 16px 36px -10px var(--dea-accent-glow);
   position: relative;
 
   &::after {

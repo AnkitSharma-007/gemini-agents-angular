@@ -16,8 +16,8 @@
   &::before {
     content: '';
     position: absolute;
-    inset: -20% -10% 20% -10%;
-    background: var(--dea-gradient-brand);
+    inset: -20% -10% 20%;
+    background: var(--dea-accent);
     opacity: 0.18;
     filter: blur(80px);
     z-index: -1;
@@ -161,7 +161,7 @@
 }
 
 .node-planner {
-  background: var(--dea-gradient-brand);
+  background: var(--dea-accent-solid);
   border-color: m.blend(var(--dea-accent), 60%, transparent);
   color: var(--color-on-accent);
   flex-direction: column;
@@ -312,7 +312,7 @@
   display: grid;
   place-items: center;
   border-radius: var(--dea-radius-sm);
-  background: var(--dea-gradient-brand-soft);
+  background: var(--dea-accent-solid);
   box-shadow: 0 6px 16px -6px var(--dea-accent-glow);
 
   mat-icon {
@@ -356,9 +356,9 @@
   &::before {
     content: '';
     position: absolute;
-    inset: 0 0 auto 0;
+    inset: 0 0 auto;
     height: 4px;
-    background: var(--dea-gradient-brand);
+    background: var(--dea-accent);
     opacity: 0.7;
   }
 
@@ -498,7 +498,7 @@
     content: '';
     position: absolute;
     inset: -1px;
-    background: var(--dea-gradient-brand);
+    background: var(--dea-accent);
     opacity: 0.12;
     z-index: -1;
     filter: blur(60px);
