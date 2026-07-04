@@ -7,7 +7,7 @@
 .empty {
   display: grid;
   place-items: center;
-  padding: 40px 24px 80px;
+  padding: var(--space-10) var(--space-6) var(--space-20);
   min-height: calc(100vh - 200px);
 }
 
@@ -16,7 +16,7 @@
   max-width: 640px;
   width: 100%;
   margin: 0 auto;
-  padding: 56px 36px 44px;
+  padding: var(--space-14) var(--space-9) var(--space-12);
   text-align: center;
   @include m.glass-surface;
 }
@@ -34,8 +34,8 @@
 .badge {
   width: 76px;
   height: 76px;
-  margin: 0 auto 24px;
-  border-radius: 22px;
+  margin: 0 auto var(--space-6);
+  border-radius: var(--dea-radius-xl);
   display: grid;
   place-items: center;
   background: var(--dea-gradient-brand);
@@ -48,7 +48,7 @@
     content: '';
     position: absolute;
     inset: 2px;
-    border-radius: 20px;
+    border-radius: var(--dea-radius-lg);
     background: m.blend(var(--dea-bg-solid-1), 25%, transparent);
     backdrop-filter: blur(6px);
   }
@@ -57,7 +57,7 @@
     position: relative;
     z-index: 1;
     @include m.sized-icon(34);
-    color: #fff;
+    color: var(--color-on-accent);
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
   }
 }
@@ -65,7 +65,7 @@
 h2 {
   font-size: clamp(1.5rem, 3.2vw, 2rem);
   font-weight: var(--weight-bold);
-  margin: 0 0 14px;
+  margin: 0 0 var(--space-4);
   line-height: var(--leading-tight);
   letter-spacing: -0.015em;
 }
@@ -73,7 +73,7 @@ h2 {
 p {
   color: var(--dea-fg-muted);
   line-height: var(--leading-relaxed);
-  margin: 0 auto 28px;
+  margin: 0 auto var(--space-7);
   max-width: 480px;
   font-size: var(--text-md);
 }
@@ -82,16 +82,16 @@ p {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
-  margin: 0 auto 28px;
+  gap: var(--space-2);
+  margin: 0 auto var(--space-7);
 }
 
 .feature {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: 999px;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--dea-radius-pill);
   background: m.blend(var(--dea-bg-elev-2), 70%, transparent);
   border: 1px solid var(--dea-border);
   font-size: var(--text-xs);
@@ -108,39 +108,18 @@ p {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: var(--space-4);
 }
 
 .connect-cta {
-  height: 50px;
-  padding-inline: 24px;
-  border-radius: 999px;
-  font-weight: var(--weight-semibold);
+  @include m.button-primary($height: 48px, $padding-x: var(--space-6));
   font-size: var(--text-md);
-  @include m.brand-pill;
-  box-shadow:
-    0 8px 24px -6px var(--dea-accent-glow),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
-  transition:
-    transform var(--dea-transition),
-    box-shadow var(--dea-transition);
-
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow:
-      0 14px 32px -8px var(--dea-accent-glow),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  }
-
-  mat-icon {
-    margin-right: 8px;
-  }
 }
 
 .studio-link {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
   font-size: var(--text-sm);
   color: var(--dea-fg-muted);
   text-decoration: none;
@@ -159,20 +138,20 @@ p {
 
 @include m.mobile {
   .empty {
-    padding: 24px 16px 48px;
+    padding: var(--space-6) var(--space-4) var(--space-12);
     min-height: auto;
   }
 
   .empty-card {
-    padding: 40px 22px 32px;
+    padding: var(--space-10) var(--space-6) var(--space-8);
     border-radius: var(--dea-radius-lg);
   }
 
   .badge {
     width: 64px;
     height: 64px;
-    border-radius: 18px;
-    margin-bottom: 18px;
+    border-radius: var(--dea-radius-lg);
+    margin-bottom: var(--space-5);
 
     mat-icon {
       @include m.sized-icon(28);
@@ -181,22 +160,22 @@ p {
 
   p {
     font-size: var(--text-sm);
-    margin-bottom: 22px;
+    margin-bottom: var(--space-6);
   }
 
   .features {
-    gap: 6px;
+    gap: var(--space-2);
   }
 
   .feature {
     font-size: var(--text-2xs);
-    padding: 5px 10px;
+    padding: var(--space-1) var(--space-3);
   }
 
   .connect-cta {
     width: 100%;
     max-width: 320px;
-    height: 46px;
+    min-height: 46px;
     font-size: var(--text-md);
   }
 }

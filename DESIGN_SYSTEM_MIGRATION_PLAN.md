@@ -1,7 +1,7 @@
 # Maestro — Design System Migration Plan
 
 **Date:** 2026-07-03
-**Status:** In progress — decisions locked (§10); **Phases 0, 1, 2 complete**; Phase 3 (spacing + radius) next.
+**Status:** In progress — decisions locked (§10); **Phases 0, 1, 2, 3, 4, 5 complete**; Phase 6 (gradient budget) next.
 **Owner:** _TBD_
 **Related docs:** `UX_DESIGN_AUDIT.md` (§4.6 gradient overload, §4.8 type/spacing, §4.9 radii, §4.7 performance), `PRODUCTION_READINESS_REVIEW.md`.
 
@@ -232,6 +232,8 @@ Add **stylelint** (separate from the existing eslint) so tokens are mandatory, n
 - **Risk/mitigation:** Layout shift from snapping to the pure 4px scale (§10.1) — do it component-by-component with a visual check each; densest layouts (Control Tower, widgets) are the highest-risk and get extra scrutiny.
 - **Rollback:** Per-file or per-phase revert.
 - **Effort:** M–L (largest mechanical phase).
+- **Status:** ✅ Done (2026-07-03). **Radius** (§7.3) migrated across all 16 `.scss` — the grab-bag `4/6/8/10/11/12/13/14/16/18/20/22px`, `999px`, `50%` folded onto `--dea-radius-2xs…xl` + `pill`/`round`. **Spacing** migrated onto the pure 4px scale (§10.1): every `padding`/`margin`/`gap` (shorthand + longhands + `padding-inline`/`row-gap`/`column-gap`), snapping off-grid values (`2/3/5→4`, `6/9→8`, `10/11/13→12`, `15→16`, `18→20`, `22→24`, `44→48`). Enforcement extended in `stylelint.config.js` to `/^padding/`, `/^margin/`, `/gap$/`; `1px` added to `ignoreValues` as a documented sub-scale hairline (inline `code`, dense chip insets). **Result: total baseline `74 → 32` warnings; zero `border-radius`/`padding`/`margin`/`gap` token violations remain.** The 32 residuals are all out-of-Phase-3 scope: **16 `#fff` color/stroke** (Phase 5), **4 non-scale `line-height`** (Phase 2 vertical-centering exceptions), and hygiene nits (`sized-icon` glyph px `disable`, one `column-gap`+`row-gap`→`gap` redundant-longhand suggestion). Build clean (styles 20.83 kB).
+- **Visual-QA note (for the §8 gate):** notable snaps to verify — **radius:** `22→28` (no-key badge), `16/18→20` (workspace nested cards, mobile badge), `10/11/13→12`; **spacing:** `44→48` (no-key CTA bottom pad), `22→24` (hero/card paddings), and the small `2/3/5→4` growths across dense chips. `1px` hairlines on inline `code` (`styles.scss`) and the schedule `.track` chip intentionally preserved.
 
 ### Phase 4 — Component primitive consolidation
 - **Objective:** One button system, one surface recipe, unified pills — remove the 3–4 competing primary-button treatments (audit §4.10).
@@ -241,6 +243,9 @@ Add **stylelint** (separate from the existing eslint) so tokens are mandatory, n
 - **Risk/mitigation:** Button height changes are visible — QA each screen; keep contextual "large" variant for hero.
 - **Rollback:** Phase PR revert.
 - **Effort:** M.
+- **Status:** ✅ Done (2026-07-03). Added a **4-role button system** to `_mixins.scss` — `button-base` (shared height/pad/radius/font/transition/disabled) + `button-hero` (single brand-gradient), `button-primary` (solid violet), `button-secondary` (outlined), `button-ghost` (tertiary). Brought forward the two dimensional a11y tokens `--target-min` (40px) / `--target-min-primary` (44px) so the mixins are token-based (full §3.6 a11y/color block still lands in Phase 5). **Gradient budget for buttons (§10.3):** kept on the landing `.cta-primary` (hero + bottom section CTA, per sign-off) only; **all other primaries → solid** — `.feature-try`, `.connect-cta`, `.save-btn`, `.dispatch-btn`, `.apply-btn`, widget `.stale-update-btn`/`.ue-retry-btn`, and the header `.key-cta` chip. Stroked utilities (`.reaudit-btn`, both `.retry-btn`) → `button-secondary`; text utilities (`.clear-btn`, `.cancel-btn`) → `button-ghost`. `base` uses `min-height` (not fixed `height`) so per-breakpoint overrides and label-wrap can't be clamped; the no-key mobile height became `min-height`. `glass-surface` was already fully consolidated (every card surface uses the mixin; the `.topbar` stays a distinct sticky-blur by design). Removed the Phase-2-deferred non-scale `line-height` centering values on `.apply-btn`/`.retry-btn` (now sized via `min-height`). Build clean (styles 20.88 kB); `lint:styles` exit 0 with **no new** token violations.
+- **Role map (for QA / future edits):** **hero (gradient):** home `.cta-primary`. **primary (solid violet):** `.feature-try`, `.connect-cta` (48px), `.dispatch-btn` (44px), `.save-btn` (40px), `.apply-btn` (32px), `.stale-update-btn`/`.ue-retry-btn` (32px), header `.key-cta`. **secondary (outlined):** home `.cta-secondary` (48px), `.reaudit-btn`/control-tower `.retry-btn` (small), widget error `.retry-btn` (36px). **ghost:** `.clear-btn`, `.cancel-btn`. Icon-only `.dismiss-btn` left outside the text-button system.
+- **Visual-QA note (for the §8 gate):** the biggest intended visual changes — **feature-card "Try", empty-state "Connect Gemini key", dialog "Save", and header key chip go from gradient → solid violet** (this is the point of §10.3; verify the hero is now the only gradient CTA per view). Button label weight normalized to semibold (ghosts → medium) and the subtle `0.02em` button tracking dropped to `--tracking-normal`. Small inline utilities (26/32px) intentionally stay below `--target-min` to preserve dense layouts — earmarked for Phase 5 hit-area padding. Check disabled/hover/focus on each screen and both themes.
 
 ### Phase 5 — Semantic color + accessibility tokens
 - **Objective:** Add contrast-safe roles, focus-ring, and min-target tokens; fix the WCAG risks that are tokenizable.
@@ -250,6 +255,8 @@ Add **stylelint** (separate from the existing eslint) so tokens are mandatory, n
 - **Risk/mitigation:** Adjusting gradient stops changes brand feel slightly — get sign-off (§10.3); focus ring must clear the busy background (use two-layer ring).
 - **Rollback:** Phase PR revert.
 - **Effort:** M.
+- **Status:** ✅ Done (2026-07-04). Added the §3.6 a11y token block to `styles.scss`: `--color-on-accent` (#fff, theme-agnostic) and `--focus-ring` (outline shorthand keyed to `--dea-accent`), alongside the `--target-min`/`--target-min-primary` brought forward in Phase 4. Introduced a **global `:focus-visible`** rule (`outline: var(--focus-ring); outline-offset: 2px`) so every interactive element gets one keyboard-focus indicator in both themes — implemented via `outline` rather than the box-shadow two-layer originally sketched, because `outline` never conflicts with a control's own shadow and is never clipped by `overflow: hidden` glass surfaces (the offset gap gives ring separation on busy backgrounds). Tokenized **every** `#fff`/`stroke: #fff` foreground to `var(--color-on-accent)` (both brand mixins + 8 consumer files), clearing all `color`/`fill`/`stroke` strict-value violations. **Subtle-text contrast:** lightened dark `--dea-fg-subtle` `#6a7088 → #7c8498` and darkened light `#7a8198 → #626981` to reach WCAG AA (~4.7–5:1 computed) on surfaces. **Gradient contrast (§10.3, signed off):** added `--dea-gradient-brand-strong` (violet→magenta, no light cyan; both themes) and routed the only two white-on-gradient interactive elements — `button-hero` (hero + section CTA) and the header `.mode-pill` chip — onto it so white passes AA (~4.7–5.5:1); the decorative rainbow `--dea-gradient-brand` is untouched for background washes. Gradient *text* (`.brand-gradient`) is already only on large display headings, satisfying the "large sizes only" item. **Result:** `lint:styles` **35 → 13** warnings, **0** color/fill/stroke violations; the 13 residuals are pre-existing hygiene nits + 3 intentional non-scale `line-height` centering exceptions (deferred to Phase 7). Build clean; bumped the `anyComponentStyle` **warning** budget 14 → 16 kB to absorb token verbosity (20 kB error ceiling unchanged).
+- **Visual-QA note (for the §8 gate):** verify both themes — (1) a visible violet focus ring appears on every button/link/input when tabbing; (2) the hero + bottom section CTA and the header mode chip now read **violet→magenta** (not rainbow) with crisp white text; (3) subtle/meta text (timestamps, hints, char-count) reads slightly stronger. **Known residual (outside the signed-off scope):** the hero *diagram* `.node-planner` node and the feature-card icon still use the decorative rainbow with white foreground — decorative illustration; can be moved to the strong gradient later if desired.
 
 ### Phase 6 — Gradient budget
 - **Objective:** Restore hierarchy with the **strict** rule (§10.2): **max one** full-gradient emphasis element per view (audit §4.6).
@@ -312,7 +319,7 @@ Add **stylelint** (separate from the existing eslint) so tokens are mandatory, n
 | 22 | `--text-3xl` (24) | §10.5: widget hero numbers read clearly larger |
 | clamp() titles | `--text-display-*` | Unchanged behavior |
 
-### 7.3 Radius mapping (proposed)
+### 7.3 Radius mapping (✅ applied in Phase 3)
 | Current px | → Token |
 |---|---|
 | 4 | `--dea-radius-2xs` |

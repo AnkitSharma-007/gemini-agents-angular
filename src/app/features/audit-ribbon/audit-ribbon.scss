@@ -5,15 +5,15 @@
 }
 
 .ribbon {
-  margin-bottom: 18px;
+  margin-bottom: var(--space-5);
 }
 
 .state {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 16px 18px;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
   @include m.glass-surface($radius: var(--dea-radius-lg), $shadow: var(--dea-shadow-1), $blur: 14px, $saturate: 100%);
 
   &::before {
@@ -55,7 +55,7 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px 12px;
+  gap: var(--space-3) var(--space-3);
   font-size: var(--text-md);
   color: var(--dea-fg);
 
@@ -99,7 +99,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--space-3);
   flex-wrap: wrap;
 }
 
@@ -107,7 +107,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 12px;
+  gap: var(--space-2) var(--space-3);
   min-width: 0;
 
   mat-icon {
@@ -131,12 +131,11 @@
 }
 
 .reaudit-btn {
-  border-radius: 999px;
-  height: 32px;
+  @include m.button-secondary($height: 32px, $padding-x: var(--space-4));
   font-size: var(--text-xs);
 
   mat-icon {
-    margin-right: 4px;
+    margin-right: var(--space-1);
     @include m.sized-icon(16);
   }
 }
@@ -145,14 +144,14 @@
   @include m.list-unstyled;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .issue {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
   background: m.blend(var(--dea-bg-elev-2), 65%, transparent);
   border: 1px solid var(--dea-border);
   border-radius: var(--dea-radius-md);
@@ -176,7 +175,7 @@
   flex-shrink: 0;
   width: 8px;
   height: 8px;
-  border-radius: 50%;
+  border-radius: var(--dea-radius-round);
   background: var(--dea-accent);
   box-shadow: 0 0 0 4px m.tint(var(--dea-accent), 18%);
 }
@@ -201,22 +200,13 @@
 .actions {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
   flex-shrink: 0;
 }
 
 .apply-btn {
+  @include m.button-primary($height: 32px, $padding-x: var(--space-4));
   font-size: var(--text-xs);
-  line-height: 32px;
-  min-height: 32px;
-  padding: 0 14px;
-  border-radius: 999px;
-  @include m.brand-solid;
-  font-weight: var(--weight-semibold);
-
-  &:disabled {
-    opacity: 0.55;
-  }
 }
 
 .dismiss-btn {
@@ -240,12 +230,12 @@ mat-progress-bar {
 
 @include m.mobile-md {
   .state {
-    padding: 14px;
+    padding: var(--space-4);
   }
 
   .issue {
     flex-wrap: wrap;
-    padding: 11px 12px;
+    padding: var(--space-3) var(--space-3);
   }
 
   .message {

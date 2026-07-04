@@ -75,7 +75,7 @@ dea-widget-shell {
   border-radius: var(--dea-radius-pill);
 
   mat-icon {
-    color: #fff;
+    color: var(--color-on-accent);
     background: var(--dea-gradient-brand-soft);
     border-radius: var(--dea-radius-round);
     padding: var(--space-1);
@@ -193,13 +193,11 @@ dea-widget-shell {
   }
 
   .stale-update-btn {
+    @include m.button-primary($height: 32px, $padding-x: var(--space-4));
     margin-left: auto;
     flex-shrink: 0;
-    border-radius: var(--dea-radius-pill);
-    height: 32px;
 
     mat-icon {
-      color: inherit;
       @include m.sized-icon(15);
       margin-right: var(--space-1);
     }
@@ -247,13 +245,11 @@ dea-widget-shell {
   }
 
   .ue-retry-btn {
+    @include m.button-primary($height: 32px, $padding-x: var(--space-4));
     margin-left: auto;
     flex-shrink: 0;
-    border-radius: var(--dea-radius-pill);
-    height: 32px;
 
     mat-icon {
-      color: inherit;
       @include m.sized-icon(15);
       margin-right: var(--space-1);
     }
@@ -342,6 +338,7 @@ dea-widget-shell {
   }
 
   .retry-btn {
+    @include m.button-secondary($height: 36px);
     margin-top: var(--space-1);
   }
 }

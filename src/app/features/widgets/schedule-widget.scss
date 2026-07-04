@@ -8,7 +8,7 @@
 .body {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: var(--space-5);
   width: 100%;
 }
 
@@ -34,14 +34,14 @@
   .tab-label {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-2);
     font-size: var(--text-sm);
     font-weight: var(--weight-medium);
 
     .num {
       width: 20px;
       height: 20px;
-      border-radius: 50%;
+      border-radius: var(--dea-radius-round);
       display: inline-grid;
       place-items: center;
       background: m.tint(var(--dea-accent), 18%);
@@ -53,11 +53,11 @@
 }
 
 .day {
-  padding-top: 14px;
+  padding-top: var(--space-4);
 }
 
 .date {
-  margin: 0 0 12px;
+  margin: 0 0 var(--space-3);
   @include m.mono-tabular($size: 12px);
 }
 
@@ -65,14 +65,14 @@
   @include m.list-unstyled;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-3);
 }
 
 .session {
   display: grid;
   grid-template-columns: 110px 1fr;
-  gap: 14px;
-  padding: 10px 12px;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-3);
   border: 1px solid var(--dea-border);
   border-radius: var(--dea-radius-md);
   background: m.blend(var(--dea-bg-elev-2), 60%, transparent);
@@ -86,7 +86,7 @@
 .time {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-2);
   font-size: var(--text-xs);
   font-weight: var(--weight-medium);
   color: var(--dea-fg-muted);
@@ -101,7 +101,7 @@
 .meta {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
   min-width: 0;
 }
 
@@ -116,7 +116,7 @@
 .sub {
   display: inline-flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: var(--space-3);
   font-size: var(--text-xs);
   color: var(--dea-fg-muted);
 }
@@ -124,7 +124,7 @@
 .speaker {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
 
   mat-icon {
     @include m.sized-icon(13);
@@ -133,8 +133,8 @@
 
 .track {
   display: inline-flex;
-  padding: 1px 8px;
-  border-radius: 999px;
+  padding: 1px var(--space-2);
+  border-radius: var(--dea-radius-pill);
   background: m.tint(var(--dea-accent), 12%);
   color: var(--dea-accent);
   font-size: var(--text-2xs);
@@ -144,8 +144,8 @@
 @include m.mobile-sm {
   .session {
     grid-template-columns: 1fr;
-    gap: 6px;
-    padding: 10px;
+    gap: var(--space-2);
+    padding: var(--space-3);
   }
 
   .time {

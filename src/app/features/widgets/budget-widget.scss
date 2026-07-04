@@ -8,15 +8,15 @@
 .body-grid {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: var(--space-5);
   width: 100%;
 }
 
 .totals {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  padding: 14px 16px;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-4);
   background: linear-gradient(
     135deg,
     m.tint(var(--dea-accent), 12%),
@@ -32,7 +32,7 @@
 
   .amount {
     display: block;
-    margin-top: 4px;
+    margin-top: var(--space-1);
     font-size: var(--text-3xl);
     font-weight: var(--weight-bold);
     font-variant-numeric: tabular-nums;
@@ -48,20 +48,20 @@
   @include m.list-unstyled;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--space-4);
 }
 
 .line {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--space-2);
 }
 
 .line-row {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--space-3);
 
   .cat {
     font-weight: var(--weight-medium);
@@ -86,12 +86,12 @@
 
 mat-progress-bar {
   @include m.progress-thin($height: 6px);
-  border-radius: 4px;
+  border-radius: var(--dea-radius-2xs);
   overflow: hidden;
 }
 
 .rationale {
-  margin: 2px 0 0;
+  margin: var(--space-1) 0 0;
   color: var(--dea-fg-muted);
   font-size: var(--text-sm);
   line-height: var(--leading-normal);
@@ -100,8 +100,8 @@ mat-progress-bar {
 @include m.mobile-xs {
   .totals {
     grid-template-columns: 1fr;
-    gap: 8px;
-    padding: 12px 14px;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
 
     .amount {
       font-size: var(--text-xl);

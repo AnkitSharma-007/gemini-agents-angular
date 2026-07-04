@@ -8,12 +8,12 @@
 .body {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-4);
   width: 100%;
 }
 
 .hero {
-  padding: 18px 18px 16px;
+  padding: var(--space-5) var(--space-5) var(--space-4);
   border: 1px solid var(--dea-border);
   border-radius: var(--dea-radius-md);
   background:
@@ -28,14 +28,14 @@
 .hero-text {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
 }
 
 .city {
   margin: 0;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-2);
   @include m.eyebrow($size: 12px);
   letter-spacing: var(--tracking-wide);
 
@@ -56,14 +56,14 @@
 .stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: var(--space-3);
 }
 
 .stat {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 10px 12px;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-3);
   border: 1px solid var(--dea-border);
   border-radius: var(--dea-radius-md);
   background: var(--dea-bg-elev-2);
@@ -76,7 +76,7 @@
 .stat-value {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   font-size: var(--text-xl);
   font-weight: var(--weight-semibold);
   font-variant-numeric: tabular-nums;
@@ -89,7 +89,7 @@
 
 .amenities {
   ::ng-deep .mdc-evolution-chip-set__chips {
-    gap: 6px;
+    gap: var(--space-2);
   }
 
   mat-chip {
@@ -110,15 +110,15 @@
   color: var(--dea-fg);
   font-size: var(--text-md);
   line-height: var(--leading-relaxed);
-  padding: 12px 14px;
+  padding: var(--space-3) var(--space-4);
   background: m.blend(var(--dea-bg-elev-2), 60%, transparent);
   border-left: 3px solid var(--dea-accent);
-  border-radius: 6px;
+  border-radius: var(--dea-radius-xs);
 }
 
 @include m.mobile-xs {
   .hero {
-    padding: 14px;
+    padding: var(--space-4);
   }
 
   .venue-name {

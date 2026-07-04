@@ -38,26 +38,26 @@
 ) {
   height: $height;
   padding: 0 $padding-x;
-  border-radius: 999px;
+  border-radius: var(--dea-radius-pill);
   font-size: $font-size;
   font-weight: $font-weight;
 }
 
-@mixin brand-pill {
-  background: var(--dea-gradient-brand);
-  color: #fff;
+@mixin brand-pill($gradient: var(--dea-gradient-brand)) {
+  background: $gradient;
+  color: var(--color-on-accent);
 
   mat-icon {
-    color: #fff;
+    color: var(--color-on-accent);
   }
 }
 
 @mixin brand-solid {
   background: var(--dea-accent-solid);
-  color: #fff;
+  color: var(--color-on-accent);
 
   mat-icon {
-    color: #fff;
+    color: var(--color-on-accent);
   }
 }
 
@@ -65,6 +65,94 @@
   color: $var;
   border-color: blend($var, $border, var(--dea-border));
   background: tint($var, $bg);
+}
+
+// =========================================================================
+// Button system (Phase 4, §10.3/§10.4) — one base + role mixins on tokens.
+// Layered over Angular Material buttons; icon spacing stays via mat-icon margin.
+// Roles: hero (single brand-gradient CTA), primary (solid violet in-app action),
+// secondary (outlined alternative), ghost (tertiary/utility).
+// =========================================================================
+@mixin button-base($height: var(--target-min), $padding-x: var(--space-5)) {
+  min-height: $height;
+  padding-inline: $padding-x;
+  border-radius: var(--dea-radius-pill);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-normal);
+  transition:
+    transform var(--dea-transition),
+    box-shadow var(--dea-transition),
+    background var(--dea-transition),
+    border-color var(--dea-transition),
+    color var(--dea-transition),
+    opacity var(--dea-transition);
+
+  mat-icon {
+    margin-right: var(--space-2);
+  }
+
+  &:hover:not([disabled], :disabled) {
+    transform: translateY(-1px);
+  }
+
+  &[disabled],
+  &:disabled {
+    opacity: 0.55;
+  }
+}
+
+@mixin button-hero($height: 48px, $padding-x: var(--space-6)) {
+  @include button-base($height, $padding-x);
+  // Strong (violet→magenta) gradient so white label/icon passes WCAG AA (§10.3).
+  @include brand-pill(var(--dea-gradient-brand-strong));
+  font-size: var(--text-md);
+  box-shadow:
+    0 8px 22px -6px var(--dea-accent-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+
+  &:hover:not([disabled], :disabled) {
+    box-shadow:
+      0 14px 30px -8px var(--dea-accent-glow),
+      inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  }
+}
+
+@mixin button-primary($height: var(--target-min-primary), $padding-x: var(--space-5)) {
+  @include button-base($height, $padding-x);
+  @include brand-solid;
+
+  &:hover:not([disabled], :disabled) {
+    box-shadow: var(--dea-shadow-1);
+  }
+}
+
+@mixin button-secondary($height: var(--target-min-primary), $padding-x: var(--space-5)) {
+  @include button-base($height, $padding-x);
+  border-color: var(--dea-border-strong);
+  color: var(--dea-fg);
+
+  mat-icon {
+    color: var(--dea-fg-muted);
+  }
+
+  &:hover:not([disabled], :disabled) {
+    border-color: blend(var(--dea-accent), 45%, var(--dea-border-strong));
+    background: tint(var(--dea-accent), 6%);
+  }
+}
+
+@mixin button-ghost($height: var(--target-min), $padding-x: var(--space-4)) {
+  @include button-base($height, $padding-x);
+  font-weight: var(--weight-medium);
+  color: var(--dea-fg-muted);
+  background: transparent;
+
+  &:hover:not([disabled], :disabled) {
+    transform: none;
+    color: var(--dea-fg);
+    background: blend(var(--dea-bg-elev-2), 60%, transparent);
+  }
 }
 
 @mixin eyebrow($size: var(--text-2xs), $color: var(--dea-fg-muted)) {

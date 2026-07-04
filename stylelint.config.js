@@ -18,9 +18,20 @@ module.exports = {
     // === Design-token enforcement (the migration worklist) =====================
     // Require a token/var/function — not a raw literal — for these properties.
     // Flipped to error per phase: font-size/line-height (Phase 2), border-radius (Phase 3),
-    // color (Phase 5). padding/margin/gap are added in Phase 3 (shorthands are noisy).
+    // color (Phase 5). Spacing (padding/margin/gap, incl. longhands) enforced from Phase 3
+    // on the pure 4px scale (§3.1/§10.1); the plugin validates each token in a shorthand.
     'scale-unlimited/declaration-strict-value': [
-      ['/color$/', 'fill', 'stroke', 'font-size', 'line-height', 'border-radius'],
+      [
+        '/color$/',
+        'fill',
+        'stroke',
+        'font-size',
+        'line-height',
+        'border-radius',
+        '/^padding/',
+        '/^margin/',
+        '/gap$/',
+      ],
       {
         ignoreValues: [
           'transparent',
@@ -32,6 +43,9 @@ module.exports = {
           'auto',
           'normal',
           '0',
+          // Sub-scale hairline: intentional 1px insets on inline code / dense chips
+          // that have no 4px-scale equivalent (see §10.1 note).
+          '1px',
         ],
         severity: 'warning',
       },

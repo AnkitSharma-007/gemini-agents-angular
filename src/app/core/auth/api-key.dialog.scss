@@ -23,9 +23,9 @@
   z-index: 1;
   display: flex;
   align-items: flex-start;
-  gap: 14px;
+  gap: var(--space-4);
   margin: 0;
-  padding: 24px 28px 4px;
+  padding: var(--space-6) var(--space-7) var(--space-1);
 
   &::before {
     display: none;
@@ -38,7 +38,7 @@
   flex-shrink: 0;
   display: grid;
   place-items: center;
-  border-radius: 13px;
+  border-radius: var(--dea-radius-sm);
   background: var(--dea-gradient-brand);
   box-shadow:
     0 0 0 1px m.tint(var(--dea-accent), 30%),
@@ -50,7 +50,7 @@
     content: '';
     position: absolute;
     inset: 1px;
-    border-radius: 12px;
+    border-radius: var(--dea-radius-sm);
     background: m.blend(var(--dea-bg-solid-1), 28%, transparent);
     backdrop-filter: blur(4px);
   }
@@ -58,7 +58,7 @@
   mat-icon {
     position: relative;
     z-index: 1;
-    color: #fff;
+    color: var(--color-on-accent);
     @include m.sized-icon(20);
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25));
   }
@@ -67,7 +67,7 @@
 .title-text {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
   min-width: 0;
   flex: 1;
 }
@@ -90,17 +90,17 @@
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 20px 28px 8px;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-7) var(--space-2);
   overflow-y: auto;
   max-height: min(72vh, 640px);
 }
 
 .privacy {
   display: flex;
-  gap: 10px;
+  gap: var(--space-3);
   margin: 0;
-  padding: 12px 14px;
+  padding: var(--space-3) var(--space-4);
   border-radius: var(--dea-radius-md);
   border: 1px dashed m.blend(var(--dea-accent), 35%, var(--dea-border));
   background: m.tint(var(--dea-accent), 6%);
@@ -112,7 +112,7 @@
     @include m.sized-icon(16);
     color: var(--dea-accent);
     flex-shrink: 0;
-    margin-top: 2px;
+    margin-top: var(--space-1);
   }
 }
 
@@ -134,7 +134,7 @@
     padding-bottom: 1px;
     display: inline-flex;
     align-items: center;
-    gap: 3px;
+    gap: var(--space-1);
     transition: color var(--dea-transition), border-color var(--dea-transition);
 
     &:hover {
@@ -164,8 +164,8 @@
 .quality {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 14px 16px;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-4);
   border-radius: var(--dea-radius-md);
   border: 1px solid var(--dea-border);
   background: m.blend(var(--dea-bg-elev-2), 55%, transparent);
@@ -175,7 +175,7 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 4px;
+  gap: var(--space-1);
 }
 
 .quality-eyebrow {
@@ -194,7 +194,7 @@
 
 .quality-toggle {
   width: 100%;
-  border-radius: 999px;
+  border-radius: var(--dea-radius-pill);
   overflow: hidden;
   background: var(--dea-bg-elev-2);
   border: 1px solid var(--dea-border-strong);
@@ -220,11 +220,11 @@
   ::ng-deep .mat-button-toggle-label-content {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: var(--space-2);
     font-size: var(--text-sm);
     font-weight: var(--weight-semibold);
     letter-spacing: 0.02em;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     line-height: 1;
   }
 
@@ -239,11 +239,11 @@
 
   ::ng-deep .mat-button-toggle-checked {
     background: var(--dea-gradient-brand);
-    color: #fff;
+    color: var(--color-on-accent);
     box-shadow: inset 0 0 0 1px m.tint(var(--dea-accent), 30%);
 
     mat-icon {
-      color: #fff;
+      color: var(--color-on-accent);
     }
   }
 }
@@ -251,8 +251,8 @@
 .error {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  padding: 11px 14px;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
   background: m.tint(var(--dea-error), 12%);
   border: 1px solid m.tint(var(--dea-error), 35%);
   border-radius: var(--dea-radius-md);
@@ -280,10 +280,10 @@
 .dialog-actions {
   position: relative;
   z-index: 1;
-  gap: 8px;
-  padding: 14px 24px 22px;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-6) var(--space-6);
   border-top: 1px solid var(--dea-border);
-  margin-top: 6px;
+  margin-top: var(--space-2);
 
   .spacer {
     flex: 1;
@@ -291,64 +291,35 @@
 }
 
 .clear-btn {
+  @include m.button-ghost($height: 36px);
   font-size: var(--text-xs);
   color: var(--dea-error);
 
-  &:hover {
+  &:hover:not([disabled]):not(:disabled) {
+    color: var(--dea-error);
     background: m.tint(var(--dea-error), 8%);
   }
 }
 
 .cancel-btn {
-  font-size: var(--text-sm);
-  color: var(--dea-fg-muted);
-  border-radius: 999px;
-  padding: 0 14px;
-  height: 36px;
+  @include m.button-ghost($height: 36px);
   min-width: 0;
-
-  &:hover {
-    color: var(--dea-fg);
-    background: m.blend(var(--dea-bg-elev-2), 60%, transparent);
-  }
 }
 
 .save-btn {
-  @include m.pill($height: 40px, $padding-x: 20px, $font-size: 13px, $font-weight: 600);
-  @include m.brand-pill;
-  letter-spacing: 0.02em;
-  box-shadow:
-    0 6px 16px -6px var(--dea-accent-glow),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
-  transition:
-    transform var(--dea-transition),
-    box-shadow var(--dea-transition),
-    opacity var(--dea-transition);
+  @include m.button-primary($height: 40px, $padding-x: var(--space-5));
 
   mat-icon {
     @include m.sized-icon(16);
-    margin-right: 6px;
   }
 
   mat-spinner {
-    margin-right: 8px;
+    margin-right: var(--space-2);
     display: inline-block;
 
     ::ng-deep circle {
-      stroke: #fff;
+      stroke: var(--color-on-accent);
     }
-  }
-
-  &:hover:not([disabled]) {
-    transform: translateY(-1px);
-    box-shadow:
-      0 12px 24px -8px var(--dea-accent-glow),
-      inset 0 1px 0 rgba(255, 255, 255, 0.22);
-  }
-
-  &[disabled] {
-    opacity: 0.55;
-    box-shadow: none;
   }
 }
 
@@ -358,7 +329,7 @@
   }
 
   .dialog-title {
-    padding: 20px 20px 4px;
+    padding: var(--space-5) var(--space-5) var(--space-1);
   }
 
   .title-heading {
@@ -366,12 +337,12 @@
   }
 
   .dialog-body {
-    padding: 16px 20px 4px;
-    gap: 14px;
+    padding: var(--space-4) var(--space-5) var(--space-1);
+    gap: var(--space-4);
   }
 
   .dialog-actions {
-    padding: 14px 18px 18px;
+    padding: var(--space-4) var(--space-5) var(--space-5);
     flex-wrap: wrap;
 
     .spacer {
