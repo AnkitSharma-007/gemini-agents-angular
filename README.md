@@ -36,6 +36,7 @@ The three specialists run **in parallel** under `Promise.allSettled`, so one fai
 - **Per-widget refine bars** — ask for surgical edits ("cut A/V cost by 25%", "swap to an outdoor venue") and only the owning specialist re-runs.
 - **Confidence scoring & opt-out auto-repair** — the Auditor scores each widget's quality; widgets below the threshold can be auto-repaired after a run (one extra generation + re-audit per widget, on your own key). It's **on by default, toggleable from the Control Tower** (persisted), and every repair announces its before → after confidence so the extra spend is visible.
 - **Multimodal brief intake** — draft a brief by dictating (Web Speech API) or attaching an image/PDF that Gemini reads into an editable prompt before you run.
+- **Keyless guided demo** — no key? Open `/architect?demo=1` (or **Watch a sample run** from the home page) to replay a complete run — planner → three specialists → an Auditor that flags the budget and then **self-heals** it — driven entirely by canned data. It scripts the real signal store on a cancelable timeline that respects `prefers-reduced-motion` and pauses on tab-hide, so there's no network call and no cost; every run-mutating control is disabled so a demo can never touch a real key.
 - **Google-Search grounding** — Schedule and Venue surface real `groundingMetadata` citations as source chips with `rel="noopener noreferrer"`.
 - **Friendly, centralized errors** — failures map to a sanitized `AppError` (auth, quota, network, invalid-model, …) shown as a toast or an inline retry shell; raw API text never reaches the UI.
 - **BYOK by design** — your Gemini key is validated against `models.list`, stored only in `localStorage`, masked in the UI (`••••abcd`), and never sent to any server we operate.
@@ -55,19 +56,21 @@ No `.env` needed — the app prompts for your Gemini key on first run and keeps 
 
 ### Routes
 
-| Path               | Page                   | Purpose                                               |
-| ------------------ | ---------------------- | ----------------------------------------------------- |
-| `/`                | Home                   | Feature tour with one-click **Try this brief** demos  |
-| `/architect`       | Workspace              | Prompt, Control Tower, audit ribbon, and live widgets |
-| `/architect?try=…` | Workspace (pre-filled) | Deep-link a prompt into the textarea                  |
+| Path                | Page                   | Purpose                                               |
+| ------------------- | ---------------------- | ----------------------------------------------------- |
+| `/`                 | Home                   | Feature tour with one-click **Try this brief** demos  |
+| `/architect`        | Workspace              | Prompt, Control Tower, audit ribbon, and live widgets |
+| `/architect?try=…`  | Workspace (pre-filled) | Deep-link a prompt into the textarea                  |
+| `/architect?demo=1` | Workspace (demo)       | Keyless, scripted sample run — no API key, no network |
 
 ### Commands
 
 ```bash
 npm start                  # dev server
-npm run build              # production build (~129 kB gzip initial transfer)
-npm test -- --watch=false  # one-shot unit run (142 tests across 16 files)
+npm run build              # production build → dist/maestro/browser/
+npm test -- --watch=false  # one-shot unit run
 npm run lint               # ESLint (angular-eslint) over TS + templates
+npm run lint:styles        # Stylelint: design-token guardrail over SCSS
 npm run watch              # dev-config build with watch (no serve)
 ```
 
@@ -138,51 +141,40 @@ Pure SPA: drop `dist/maestro/browser/` on any static host (Vercel, Netlify, Clou
 - Thrown values are converted to a sanitized `AppError` by `core/errors` and surfaced through a global `ErrorHandler` + snackbar, with inline retry on agent shells.
 - Every orchestrator entry point gets a fresh `AbortController`, so switching keys, starting a new run, or unmounting cancels in-flight Gemini streams synchronously.
 
+### Guided demo (no key)
+
+`?demo=1` boots a `DemoModeService` that replays a canned run **without touching the orchestrator or the network**. It lazy-loads a hand-authored dataset + choreography and drives `AgentStore` mutations on a `DemoTimeline`: the timeline scales down under `prefers-reduced-motion`, pauses while the tab is hidden (so a backgrounded demo doesn't fire a burst of beats on return), and shares one `AbortController` so Replay / Exit / navigation cancel cleanly. Because it feeds the real widgets and telemetry, the demo is indistinguishable from a live run — including a scripted Auditor flag and one-tap **self-heal** — while the production Gemini path stays completely untouched.
+
 ---
 
 ## Project structure
 
 ```
 src/
-├── _mixins.scss                    Shared SCSS design-system mixins
-├── styles.scss                     Global tokens, theme blocks, dialog + snackbar overrides
-├── index.html                      CSP, OG tags, subsetted Material Symbols font
+├── _mixins.scss        Shared SCSS design-system mixins
+├── styles.scss         Global design tokens, theme blocks, Material overrides
+├── index.html          CSP, OG tags, subsetted Material Symbols font
 └── app/
-    ├── app.{ts,html,scss}          Shell: topbar + footer + <router-outlet>
-    ├── app.routes.ts               Lazy routes: `/` (home) and `/architect` (workspace)
-    ├── app.config.ts               Zoneless CD, router, and global ErrorHandler
+    ├── app.*           Shell (topbar + footer + <router-outlet>), routes, zoneless config
     │
-    ├── core/                       Pure logic, no DOM
-    │   ├── ai/
-    │   │   ├── agents/             planner · auditor · budget · schedule · venue · base
-    │   │   ├── intake/             Multimodal brief intake (image/PDF → editable brief)
-    │   │   ├── agent-orchestrator.service.ts   Run / refine / fix-it / ripple / re-audit / retry / self-heal
-    │   │   ├── gemini.schemas.ts   Structured-output JSON schemas per agent
-    │   │   ├── gemini.prompts.ts   System prompts and brief templates
-    │   │   ├── gemini-pricing.ts   USD list prices for cost estimates
-    │   │   ├── genai-loader.ts     Lazy dynamic import of @google/genai SDK
-    │   │   ├── ripple.ts           Cross-widget dependency prompts
-    │   │   └── telemetry-format.ts Token / cost / duration formatting
-    │   ├── auth/                   BYOK: validate() against models.list + connect-key dialog
-    │   ├── errors/
-    │   │   ├── app-error.ts               toAppError() + sanitized AppError model
-    │   │   ├── notification.service.ts    MatSnackBar wrapper
-    │   │   └── global-error-handler.ts    App-wide ErrorHandler → friendly toast
-    │   ├── demo/                   HERO_PROMPT + curated try-this briefs
-    │   ├── format/                 Safe formatters (e.g. currency-code normalization)
-    │   ├── settings/               Persisted user prefs (auto-repair opt-out)
-    │   ├── state/                  Signal store + query-param → textarea hand-off
-    │   ├── theme/                  Light/dark, persisted, prefers-color-scheme aware
-    │   └── types/                  Discriminated unions, SPECIALIST_META, widget configs
+    ├── core/           Pure logic, no DOM
+    │   ├── ai/         Agents, orchestrator, schemas, prompts, pricing, grounding, intake
+    │   ├── auth/       BYOK: validate() against models.list + connect-key dialog
+    │   ├── errors/     toAppError() + global ErrorHandler + snackbar service
+    │   ├── demo/       Keyless sample run: mode service · script · canned data · timeline
+    │   ├── state/      Signal store + query-param → textarea hand-off
+    │   ├── theme/      Light/dark, persisted, prefers-color-scheme aware
+    │   └── …           format · settings · types
     │
-    ├── features/                   UI building blocks
-    │   ├── audit-ribbon/           Critic banner + fix-it chips + Re-audit
-    │   ├── command-center/         Prompt card + sample chips + no-key empty state
-    │   ├── control-tower/          Live agent timeline + per-agent Retry + telemetry
-    │   ├── renderer/               WIDGET_REGISTRY (lazy) + WidgetSlot + GenerativeRenderer
-    │   └── widgets/                widget-shell · refine-bar · citation-chips + the three widgets
+    ├── features/       UI building blocks
+    │   ├── audit-ribbon/     Critic banner + fix-it chips + Re-audit
+    │   ├── command-center/   Prompt card + sample chips + no-key empty state
+    │   ├── control-tower/    Live agent timeline + per-agent Retry + telemetry
+    │   ├── demo/             Demo banner: phase status + Replay / Exit / Connect-key
+    │   ├── renderer/         WIDGET_REGISTRY (lazy) + WidgetSlot + GenerativeRenderer
+    │   └── widgets/          widget-shell · refine-bar · citation-chips + the three widgets
     │
-    └── pages/                      Lazy route components: home (`/`) and workspace (`/architect`)
+    └── pages/          Lazy route components: home (`/`) and workspace (`/architect`)
 ```
 
 ---
@@ -193,19 +185,19 @@ src/
 | --------- | -------------------------------------- | --------------------------------------------------------------------------------------------- |
 | Framework | **Angular 22 zoneless**                | Smallest reactive surface; signals everywhere; OnPush default.                                |
 | State     | **Signals + per-feature stores**       | Computed views; native cancellation via `AbortController`.                                    |
-| LLM SDK   | **`@google/genai` v2** (lazy)          | Structured outputs + streaming + Google Search grounding; ~45 kB gzip off the initial bundle. |
+| LLM SDK   | **`@google/genai` v2** (lazy)          | Structured outputs + streaming + Google Search grounding; lazy-loaded off the initial bundle.  |
 | UI kit    | **Angular Material 22**                | Form fields, button toggles, progress bars, snackbars, violet theme.                          |
-| Styles    | **SCSS + design-system mixins**        | `glass-surface`, `pill`, `tinted-pill`, breakpoints — DRY source, same emitted CSS.           |
-| Routing   | **Standalone routes + lazy loading**   | Pages, the API-key dialog, the SDK, and every widget are lazy chunks.                         |
-| Tests     | **Vitest 4** (`jsdom`)                 | 142 tests across 16 files: schemas, agents, store, error mapping, pricing, telemetry, settings. |
-| Lint      | **angular-eslint 22** (flat config)    | `typescript-eslint` + Angular template rules incl. accessibility; `npm run lint`.             |
-| Build     | **Angular esbuild (`@angular/build`)** | Fast production builds; per-component-style budget at 14 kB warn / 20 kB error.               |
+| Styles    | **SCSS + design tokens + mixins**      | Tokens are the single source of truth; `glass-surface`/`pill` mixins keep it DRY.             |
+| Routing   | **Standalone routes + lazy loading**   | Pages, the API-key dialog, the SDK, the demo, and every widget are lazy chunks.               |
+| Tests     | **Vitest 4** (`jsdom`)                 | Unit specs for schemas, agents, store, errors, pricing, telemetry, settings, and the demo.     |
+| Lint      | **angular-eslint 22 + Stylelint 17**   | TS + template a11y rules (`npm run lint`); design-token guardrail (`npm run lint:styles`).     |
+| Build     | **Angular esbuild (`@angular/build`)** | Fast production builds; enforced initial-bundle + per-component-style budgets.                  |
 
 ---
 
 ## Bundle & security
 
-- **Initial transfer ~129 kB gzip** (549 kB raw). The heavy pieces load on demand: `@google/genai` (~45 kB gzip, first API call), the workspace page, the API-key dialog, and each widget.
+- **Lean initial transfer** — the initial bundle stays small because everything non-critical is a lazy chunk: `@google/genai` (on the first API call), the workspace page, the API-key dialog, each widget, and the guided-demo script + canned data (only on `?demo=1`). A production build budget guards against regressions.
 - **Performance** — lazy SDK/dialog/widgets/pages keep first paint lean; the Material Symbols font is subsetted to the glyphs actually used; the Control Tower ticker runs at 500 ms and pauses when the tab is hidden; every Gemini stream is tied to an `AbortController`.
 - **Security** — strict CSP in `index.html` (`script-src 'self'` with no `'unsafe-inline'`; `connect-src` limited to `generativelanguage.googleapis.com`, plus `object-src 'none'`, `frame-ancestors 'none'`, `base-uri 'self'`); `rel="noopener noreferrer"` on external links; no analytics or third-party scripts; the API key is never logged, is masked in the UI, and is wiped on clear. (The key lives in `localStorage` as a deliberate BYOK/no-backend trade-off.)
 - **Multimodal intake privacy** — attached images/PDFs are read in-browser and sent (base64-inline) only to the Gemini API on your own key, exactly like a typed brief. Voice input uses the browser's built-in Web Speech API; note that in Chromium browsers this streams audio to the browser vendor's speech service (a browser-level behavior outside the app's CSP), so it is opt-in.
@@ -218,9 +210,10 @@ src/
 npm test -- --watch=false
 ```
 
-```
- Test Files  16 passed (16)
-      Tests  142 passed (142)
-```
+Specs cover the structured-output schemas, agent streaming + tolerant JSON parsing, store mutations and audit lifecycle (incl. issue-id de-dup and confidence clearing), error mapping (`toAppError`) and classification, BYOK validation, ripple builders, pricing math, telemetry formatting, settings persistence, currency normalization, the self-heal/intake flows, and the guided demo (timeline cancellation + tab-hide pausing, scripted run, canned-data integrity, and lifecycle guards).
 
-Specs cover the structured-output schemas, agent streaming + tolerant JSON parsing, store mutations and audit lifecycle (incl. issue-id de-dup and confidence clearing), error mapping (`toAppError`) and classification, BYOK validation, ripple builders, pricing math, telemetry formatting, settings persistence, currency normalization, and the self-heal/intake flows.
+---
+
+## License
+
+[MIT](LICENSE) © 2026 Ankit.
