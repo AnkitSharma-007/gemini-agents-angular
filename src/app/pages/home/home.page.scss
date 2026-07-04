@@ -439,6 +439,13 @@
 .feature-try {
   @include m.button-primary;
   width: 100%;
+  line-height: var(--leading-snug);
+
+  // Labels are kept short enough to sit on one line, but on the narrowest cards
+  // they can still wrap — balance the lines so a word is never left orphaned.
+  span {
+    text-wrap: balance;
+  }
 }
 
 .section-stack {

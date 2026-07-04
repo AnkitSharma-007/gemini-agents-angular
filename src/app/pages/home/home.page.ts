@@ -31,7 +31,7 @@ const FEATURES: readonly FeatureCard[] = [
     description:
       'A Planner decomposes your brief into specialist tasks. Three Specialists (Budget, Schedule, Venue) run in parallel. An Auditor cross-checks them for consistency. You watch every step happen.',
     tip: 'Watch the Control Tower on the right to see each agent transition through thinking → streaming → done.',
-    tryLabel: 'Try a 3-day conference brief',
+    tryLabel: 'Try a conference brief',
     tryPrompt: HERO_PROMPT,
   },
   {
@@ -41,7 +41,7 @@ const FEATURES: readonly FeatureCard[] = [
     title: 'Widgets materialize from streamed JSON',
     description:
       'Each specialist emits a structured JSON payload that gets rendered as a fully styled Angular widget (a budget breakdown, a multi-day schedule, a venue card) instantiated and updated as tokens arrive. No hard-coded templates.',
-    tryLabel: 'See widgets render in real time',
+    tryLabel: 'Watch widgets render',
     tryPrompt: LAUNCH_PROMPT,
   },
   {
@@ -63,7 +63,7 @@ const FEATURES: readonly FeatureCard[] = [
     description:
       'Every widget gets a Refine button. Ask for surgical changes such as "cut A/V cost by 25%", "add a mobile dev track", or "swap to an outdoor venue", and only that specialist re-runs. Faster, cheaper, more focused than re-prompting from scratch.',
     tip: 'After your first run, click Refine on any widget to see scoped editing in action.',
-    tryLabel: 'Try a brief, then refine it',
+    tryLabel: 'Try, then refine it',
     tryPrompt: SUMMIT_PROMPT,
   },
   {

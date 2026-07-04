@@ -1,7 +1,7 @@
 # Maestro — Design System Migration Plan
 
 **Date:** 2026-07-03
-**Status:** **Core migration complete** — decisions locked (§10); **Phases 0–8 complete**; ruleset locked at error severity. Only **Phase 9 (optional aesthetic modernization)** remains, plus a documented manual device-perf pass.
+**Status:** **Migration complete & closed** — decisions locked (§10); **Phases 0–8 complete and committed**; ruleset locked at error severity. **Phase 9 (optional aesthetic modernization) was spiked on 2026-07-04 and declined** — glassmorphism/aurora retained (§10.6). Remaining follow-ups are both minor: a manual **on-device performance measurement** (§6 Phase 8), and a documented **touch-target exception** where a few dense inline utilities sit below the 40px `--target-min` baseline by design (still ≥ WCAG AA's 24px, §11). A post-migration polish log is in §13.
 **Owner:** _TBD_
 **Related docs:** `UX_DESIGN_AUDIT.md` (§4.6 gradient overload, §4.8 type/spacing, §4.9 radii, §4.7 performance), `PRODUCTION_READINESS_REVIEW.md`.
 
@@ -311,7 +311,8 @@ Add **stylelint** (separate from the existing eslint) so tokens are mandatory, n
 - **Verify:** `npm run lint:styles` → **0 problems at error severity**; `npm run build` clean, no budget warnings; min()-blur, `@supports` fallback, and mobile `background-attachment:scroll` all confirmed in `dist`.
 - **Visual-QA note (for the §8 gate):** desktop look unchanged (regression check across both themes); on a touch device the page background scrolls with content (no parallax) and glass panels are slightly less blurred — verify text-on-glass contrast still holds.
 
-### Phase 9 — Aesthetic modernization (optional, post-migration)
+### Phase 9 — Aesthetic modernization (optional) — ⛔ DECLINED (spiked 2026-07-04)
+- **Decision (2026-07-04):** Spiked on the workspace screen (opaque elevated surfaces, `backdrop-filter` removed, auroras dialed back), then rolled out globally for an A/B review in **both themes**. The flatter direction was judged to weaken this product's identity, so it was **declined**; the entire change set was **reverted and never committed** — glassmorphism/aurora is retained. This phase is closed. Because the re-skin was purely a token-value + `glass-surface` change, it can be revisited later as a self-contained edit if the direction is reconsidered. The original plan for the phase is preserved below for reference.
 - **Objective:** Act on the audit's aesthetic recommendation (§4.6, §7.4): move away from full glassmorphism/aurora toward flatter, higher-contrast, "quiet luxury" surfaces with accent used surgically — *without* re-touching every file.
 - **Why it's separated:** This is a **subjective, direction-setting redesign**, not systematization. Coupling it with Phases 0–8 would (a) balloon scope, (b) break the per-phase visual-QA gate (you can't distinguish an intended re-skin shift from a migration regression when both happen at once), and (c) require its own design sign-off. Phases 0–8 keep the look constant on purpose. Once the token system exists, this becomes a small, centralized change instead of a cross-file overhaul.
 - **Prerequisite:** Phases 1–8 complete. Because surface/elevation/gradient are now tokens, the re-skin is primarily a **token-value change** (surface recipes, elevation, gradient stops) plus the `glass-surface` mixin — not edits scattered across ~15 components.
@@ -398,14 +399,14 @@ All six decisions are resolved. Values below are authoritative for the token lay
 3. **Primary button identity:** ✅ **Solid violet (`brand-solid`) for in-app primary actions; gradient (`brand-pill`) reserved for the hero CTA only** (Phase 4).
 4. **Touch-target strictness:** ✅ **40px baseline (`--target-min`), 44px on primary actions (`--target-min-primary`).** (40px comfortably clears WCAG AA's 24px minimum.)
 5. **Type ceiling:** ✅ **Fold 22px → 24px (`--text-3xl`)** for widget hero numbers.
-6. **Aesthetic direction:** ✅ **Keep glassmorphism through Phases 0–8;** the move off full glass is the separate, optional **Phase 9** (see §6). Rationale: the token system must exist first so the re-skin is a centralized token change rather than a cross-file overhaul, and so each systematization phase stays visually verifiable.
+6. **Aesthetic direction:** ✅ **Keep glassmorphism through Phases 0–8;** the move off full glass is the separate, optional **Phase 9** (see §6). Rationale: the token system must exist first so the re-skin is a centralized token change rather than a cross-file overhaul, and so each systematization phase stays visually verifiable. **Update (2026-07-04): Phase 9 was spiked in both themes and declined — glassmorphism/aurora is retained.** See §6 Phase 9.
 
 ---
 
 ## 11. Success metrics
 
 - **0** half-pixel font sizes; **0** raw-px font-size/radius declarations outside the token file.
-- **100%** of interactive controls ≥ `--target-min`.
+- Interactive controls meet the touch-target policy (§10.4): primary actions ≥ `--target-min-primary` (44px); most controls ≥ `--target-min` (40px). **Known accepted exception (2026-07-04):** a few dense inline utilities (widget `apply`/`refine`/`retry` ≈ 32–36px, header `nav-link` 36px / `key-chip` 38px) sit below the 40px baseline to preserve dense layouts — all still clear WCAG AA's 24px minimum. Adding hit-area padding to lift them to 40px is an open, optional follow-up.
 - Primary CTAs and subtle text **pass WCAG AA** contrast (both themes).
 - **≤1** full-gradient emphasis element per view.
 - `npm run lint:styles` passes at **error** severity (end state).
@@ -420,6 +421,16 @@ All six decisions are resolved. Values below are authoritative for the token lay
 **Milestone A (core, highest ROI):** Phases 0 → 1 → 2 → 3. Delivers the type/spacing/radius system + enforcement baseline. Fixes audit §4.8/§4.9 outright.
 **Milestone B (consistency + a11y):** Phases 4 → 5. Unified components + accessibility tokens.
 **Milestone C (polish + hardening):** Phases 6 → 7 → 8. Gradient budget, Material alignment, performance, enforcement lock.
-**Milestone D (optional, post-migration):** Phase 9. Aesthetic modernization off full glassmorphism — a separate, subjective re-skin that the token system makes cheap. Can be declined entirely without affecting A–C.
+**Milestone D (optional, post-migration):** Phase 9. Aesthetic modernization off full glassmorphism — a separate, subjective re-skin that the token system makes cheap. Can be declined entirely without affecting A–C. **Status: declined (2026-07-04)** after a spike in both themes — glass retained.
 
 Each phase = one small, reviewable, revertible PR. Nothing here blocks ongoing product work; the migration can pause between any two phases with the app in a fully consistent state.
+
+---
+
+## 13. Post-migration polish log (2026-07-04)
+
+Small, non-phase touch-ups made after the core migration, recorded for traceability. These are polish, not a phase; `lint:styles` still passes at **error, 0 problems**.
+
+- **Topbar tracking tokenized.** Closed the Phase-2/4 "off-scale `letter-spacing` left as literals" residual for the header: `.brand-text h1` `-0.01em → --tracking-tight`, `.nav-link` + `.key-chip` `0.02em → --tracking-normal`, `.masked` `0.04em → --tracking-wide`, `.mode-pill` `0.08em → --tracking-wider`. All sub-pixel visual changes; the entire topbar now sits on the tracking scale (§3.2). The icon (solid `--dea-accent-solid`) and wordmark (`brand-text-gradient`) were audited as already compliant.
+- **Favicon aligned to the gradient budget.** `public/favicon.svg` moved off the retired violet→cyan→pink rainbow to the sanctioned strong gradient (`--dea-gradient-brand-strong`, violet→magenta); `index.html` `mask-icon` colour matched (`#6d4aff`). Keeps the browser-tab mark consistent with the de-rainbowed in-app logo (§6/§10.2).
+- **Home copy/markup nits (non-system, tracked here for completeness):** feature-card CTA labels shortened + `text-wrap: balance` safety net so long labels never orphan a word; the "modern stack" section reworded for the zoneless/signals reality ("OnPush by default" → "Signal-based change detection") and literal template backticks replaced with `<code>` tags.

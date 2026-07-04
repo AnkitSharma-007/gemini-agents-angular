@@ -4,7 +4,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  grid-template-columns: 1fr;
   gap: var(--space-5);
   align-items: stretch;
 }
@@ -15,7 +15,28 @@ dea-widget-slot {
   min-height: 320px;
 }
 
-@media (max-width: 720px) {
+// The dashboard always renders exactly three specialist widgets, so a plain
+// auto-fit grid strands the third as a narrow orphan at mid widths (§UX 4.14).
+// Instead: stacked (narrow) → 2-up with the odd third spanning the full row
+// (tablet / small laptop) → 3-up (desktop). The :nth-child(odd) guard keeps the
+// layout balanced if the widget count ever changes.
+@media (min-width: 720px) and (max-width: 1099px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  dea-widget-slot:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 719px) {
   .grid {
     gap: var(--space-4);
   }

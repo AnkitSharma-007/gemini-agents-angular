@@ -211,6 +211,11 @@ html.theme-light {
 html,
 body {
   height: 100%;
+  // Firefox / non-WebKit engines: the ::-webkit-scrollbar rules below are
+  // Chromium/WebKit-only. These standard, inherited properties give a matching
+  // thin, muted scrollbar so the chrome stays consistent cross-browser (§UX 4.13).
+  scrollbar-width: thin;
+  scrollbar-color: m.tint(var(--dea-fg-muted), 35%) transparent;
 }
 
 body {
