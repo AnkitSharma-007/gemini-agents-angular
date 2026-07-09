@@ -95,7 +95,7 @@ const BUDGET_INITIAL: BudgetResult = {
       rationale: 'Three-hall + workshop layout at BIEC for 3 days, incl. setup and teardown.',
     },
     {
-      category: 'Catering (3 days × 1,200)',
+      category: 'Catering (3 days × 800)',
       amount: 5_400_000,
       rationale: 'Breakfast, lunch, hi-tea and one gala dinner at ~₹500 per head per day.',
     },
@@ -143,7 +143,7 @@ const BUDGET_HEALED: BudgetResult = {
       rationale: 'Three-hall + workshop layout at BIEC for 3 days, incl. setup and teardown.',
     },
     {
-      category: 'Catering (3 days × 1,200)',
+      category: 'Catering (3 days × 800)',
       amount: 5_400_000,
       rationale: 'Breakfast, lunch, hi-tea and one gala dinner at ~₹500 per head per day.',
     },
@@ -185,7 +185,7 @@ const SCHEDULE: ScheduleResult = {
   days: [
     {
       dayLabel: 'Day 1 · Foundations & hands-on workshops',
-      date: 'Mar 10, 2026',
+      date: 'Oct 13, 2026',
       sessions: [
         { time: '09:00 – 09:45', title: 'Registration & breakfast' },
         {
@@ -215,7 +215,7 @@ const SCHEDULE: ScheduleResult = {
     },
     {
       dayLabel: 'Day 2 · Multi-agent orchestration deep dives',
-      date: 'Mar 11, 2026',
+      date: 'Oct 14, 2026',
       sessions: [
         {
           time: '09:30 – 10:15',
@@ -250,7 +250,7 @@ const SCHEDULE: ScheduleResult = {
     },
     {
       dayLabel: 'Day 3 · Production, safety & closing fireside',
-      date: 'Mar 12, 2026',
+      date: 'Oct 15, 2026',
       sessions: [
         {
           time: '09:30 – 10:15',
@@ -285,10 +285,10 @@ const VENUE: VenueResult = {
   title: 'Recommended venue',
   name: 'Bangalore International Exhibition Centre (BIEC)',
   city: 'Bengaluru, India',
-  capacity: 1_500,
+  capacity: 1_000,
   amenities: [
     '5 modular halls + 3 workshop rooms',
-    '1,500-seat plenary hall',
+    '1,000-seat plenary hall',
     'On-site A/V, fibre internet & streaming',
     'In-house catering & green rooms',
     'Metro access + 3,000-car parking',
@@ -296,7 +296,7 @@ const VENUE: VenueResult = {
   estimatedCost: 6_000_000,
   currency: INR,
   rationale:
-    'BIEC comfortably fits 1,200 attendees with ~20% headroom, supports three parallel tracks plus hands-on labs, and its integrated A/V and catering cut vendor coordination for a 3-day program.',
+    'BIEC comfortably fits 800 attendees with ~20% headroom, supports three parallel tracks plus hands-on labs, and its integrated A/V and catering cut vendor coordination for a 3-day program.',
 };
 
 const AUDIT_INITIAL: AuditorOutput = {
@@ -369,24 +369,24 @@ export const DEMO_RUN: DemoRunData = {
   model: 'gemini-3.5-flash',
   planner: {
     rationale:
-      'This is a 3-day, 1,200-person flagship conference with a hands-on core, so I split the work across three specialists: a Budget agent to allocate the ₹2.5 Cr across venue, catering, speakers, production and a contingency buffer; a Schedule agent to balance plenary keynotes with parallel workshops on multi-agent orchestration and a closing fireside; and a Venue agent to find a Bengaluru space that fits 1,200 with room for parallel tracks. Schedule and Venue are grounded with Google Search for current, real-world options.',
+      'This is a 3-day, 800-person flagship conference with a hands-on core, so I split the work across three specialists: a Budget agent to allocate the ₹2.5 Cr across venue, catering, speakers, production and a contingency buffer; a Schedule agent to balance plenary keynotes with parallel workshops on multi-agent orchestration and a closing fireside; and a Venue agent to find a Bengaluru space that fits 800 with room for parallel tracks. Schedule and Venue are grounded with Google Search for current, real-world options.',
     agents: [
       {
         id: 'budget',
         brief:
-          'Allocate a ₹2.5 crore budget for a 3-day, 1,200-attendee Agentic AI conference in Bengaluru (venue, catering, speakers, A/V/production, marketing, workshops/compute, staffing, contingency).',
+          'Allocate a ₹2.5 crore budget for a 3-day, 800-attendee Agentic AI conference in Bengaluru (venue, catering, speakers, A/V/production, marketing, workshops/compute, staffing, contingency).',
         needed: true,
       },
       {
         id: 'schedule',
         brief:
-          'Design a 3-day agenda (Mar 10–12, 2026) balancing plenary keynotes with hands-on workshops on multi-agent orchestration and a closing fireside; use parallel tracks where useful.',
+          'Design a 3-day agenda (Oct 13–15, 2026) balancing plenary keynotes with hands-on workshops on multi-agent orchestration and a closing fireside; use parallel tracks where useful.',
         needed: true,
       },
       {
         id: 'venue',
         brief:
-          'Recommend a Bengaluru venue for ~1,200 attendees supporting three parallel tracks and hands-on labs across 3 days, with integrated A/V and catering.',
+          'Recommend a Bengaluru venue for ~800 attendees supporting three parallel tracks and hands-on labs across 3 days, with integrated A/V and catering.',
         needed: true,
       },
     ],

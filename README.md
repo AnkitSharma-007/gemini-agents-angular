@@ -11,7 +11,7 @@
 
 Maestro turns a single sentence into a structured event plan rendered as live Angular widgets. It's a working reference for **multi-agent orchestration**, **generative UI**, and **bring-your-own-key** privacy on a static-SPA budget — no backend, no telemetry. Just Angular 22 (zoneless, signals), the `@google/genai` SDK, and a five-agent pipeline.
 
-> _"Plan a 3-day, 1,200-attendee Agentic AI conference in Bengaluru in October 2026, INR ₹2.5 crore budget, with hands-on workshops on multi-agent orchestration and a closing fireside."_
+> _"Plan a 3-day, 800-attendee Agentic AI conference in Bengaluru this coming October, INR ₹2.5 crore budget, with hands-on workshops on multi-agent orchestration and a closing fireside."_
 >
 > ↓ ~12 seconds later
 >
